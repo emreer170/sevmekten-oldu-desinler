@@ -1,0 +1,22 @@
+/* B1 · Bilet: eğik duran dev bilet görseli, lacivert + mandalina */
+body.b1 { --bg:#f4f6fa; --surface:#fff; --surface-2:#f4f6fa; --ink:#111b33; --muted:#53607a; --line:#dfe4ee; --line-strong:#bcc5d6;
+  --accent:#b93a0a; --accent-ink:#fff; --accent-soft:#fff1ea; --head:Sora,system-ui,sans-serif; --body:'Public Sans',system-ui,sans-serif; --btn-r:12px; }
+.b1 h1 { letter-spacing:-.035em; }
+.b1 .top { background:#111b33; border:0; } .b1 .brand { color:#fff; } .b1 nav a { color:#aab6d0; }
+.b1 .event { align-items:center; }
+@media (min-width:860px) { .b1 .event { grid-template-columns: 1fr 1fr; } }
+.ticket-art { order:2; display:flex; max-width:520px; width:100%; margin-inline:auto; rotate:-4deg; filter: drop-shadow(0 18px 30px rgb(17 27 51 / .22)); }
+@media (min-width:860px) { .ticket-art { order:2; } .b1 .event-info { order:1; } }
+.tk-main { flex:1; background:#111b33; color:#fff; padding:1.75rem 1.5rem; border-radius:18px 0 0 18px; display:grid; gap:.75rem; align-content:space-between; position:relative; }
+.tk-main small { font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; color:#ffb48a; font-weight:600; }
+.tk-main b { font:800 clamp(1.75rem,5vw,2.5rem)/1.02 var(--head); letter-spacing:-.03em; }
+.tk-main span { font-size:.8125rem; opacity:.8; }
+.tk-stub { width:34%; background:var(--accent); color:#fff; padding:1.5rem 1rem; border-radius:0 18px 18px 0; display:grid; gap:.5rem; align-content:space-between; justify-items:center; text-align:center; border-left:3px dashed #fff; position:relative; }
+.tk-stub em { font-style:normal; font-weight:600; font-size:.8125rem; }
+.tk-stub strong { font:800 2rem var(--head); }
+.bars { display:block; font:700 .75rem var(--body); letter-spacing:.14em; font-style:normal; }
+.bars::before { content:'GİRİŞ BİLETİ'; }
+.tk-main::after, .tk-stub::before { content:''; position:absolute; width:1.25rem; height:1.25rem; border-radius:50%; background:var(--bg); right:-.7rem; z-index:1; }
+.tk-main::after { top:-.7rem; } .tk-stub::before { display:none; }
+.b1 .sdate { background:var(--accent); } .b1 .facts .price-box { border-color:var(--accent); }
+@media (max-width:859px) { .ticket-art { order:-1; margin: .75rem auto 1.5rem; } }

@@ -1,0 +1,31 @@
+/* B3 · Sade: tamamen tipografik, ince çizgiler, tek vurgu rengi (kültür kurumu havası) */
+body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted:#5b5b57; --line:#e4e4e0; --line-strong:#151515;
+  --accent:#c4161c; --accent-ink:#fff; --accent-soft:#fdeeee; --head:Newsreader,Georgia,serif; --body:Onest,system-ui,sans-serif; --btn-r:2px; --card-r:0; }
+.b3 h1 { font-weight:500; letter-spacing:-.025em; font-size:clamp(3rem,10vw,6.5rem); line-height:.95; max-width:12ch; }
+.b3 h2 { font-weight:500; } .b3 #price, .b3 .total strong, .b3 .sticky-cta b, .b3 .sdate b { font-weight:600; }
+.b3 .top { background:#fff; border-bottom:1px solid #151515; }
+.b3 .brand { font-family:var(--head); font-weight:600; }
+.b3 .event { display:block; padding-top: clamp(2.5rem,8vw,5.5rem); max-width:1040px; }
+.b3 .range { font:italic 500 1.375rem var(--head); color:var(--accent); margin-bottom:1.25rem; }
+.b3 .desc { max-width:50ch; font-size:1.125rem; }
+.b3 .facts { grid-template-columns:repeat(3,1fr); gap:0; border-block:1px solid #151515; margin:2rem 0; }
+.b3 .facts div { border:0; border-radius:0; background:none; padding:1rem 0; }
+.b3 .facts div + div { border-left:1px solid var(--line); padding-left:1.25rem; }
+.b3 .facts .price-box { grid-column:auto; display:block; }
+.b3 .price-box dd { flex-wrap:wrap; }
+.b3 .badge { border-radius:0; }
+@media (max-width:640px) { .b3 .facts { grid-template-columns:1fr 1fr; } .b3 .facts .price-box { grid-column:1/-1; border-left:0; border-top:1px solid var(--line); padding-left:0; } .b3 .facts div:nth-child(2) { border-left:1px solid var(--line); } }
+.b3 #bilet { border:0; border-top:3px solid #151515; padding-inline:0; box-shadow:none; max-width:680px; }
+.b3 .sessions { gap:0; border-top:1px solid #151515; }
+.b3 .session { border:0; border-bottom:1px solid var(--line); border-radius:0; background:none; padding:1rem 3rem 1rem 0; }
+.b3 .session:hover:not(.full) { background:var(--surface-2); }
+.b3 .session:has(input:checked) { box-shadow:none; background:var(--accent-soft); }
+.b3 .sdate { background:none; color:var(--accent); padding:0; width:3.25rem; } .b3 .sdate b { font-family:var(--head); font-size:2.25rem; }
+.b3 .sdate small { color:var(--muted); }
+.b3 .sinfo strong { font:600 1.125rem var(--head); }
+.b3 .lvl { background:none; padding:0; color:var(--accent); font-weight:600; }
+.b3 input:not([type=radio]), .b3 .stepper, .b3 .choice { border-radius:0; border-color:#151515; }
+.b3 legend .n { border-radius:0; background:var(--accent); color:#fff; }
+.b3 .person { border-radius:0; border:0; border-top:1px solid #151515; background:none; text-align:left; }
+.b3 .person .ph { margin:1rem 0 .25rem; border-radius:0; background:none; border:0; color:var(--accent); font-size:1.5rem; width:auto; height:auto; justify-self:start; }
+.b3 .person .info { padding-inline:0; }

@@ -1,0 +1,21 @@
+/* B2 · Kadro: terakota renkli bant, oyuncu baş harfleri mozaiği (fotoğraflar gelince fotoğraf olur) */
+body.b2 { --bg:#fff; --surface:#fff; --surface-2:#f7f1ee; --ink:#2a1812; --muted:#6a5851; --line:#ece2dd; --line-strong:#d2c2ba;
+  --accent:#b8421e; --accent-ink:#fff; --accent-soft:#fbe8e0; --head:'Young Serif',Georgia,serif; --body:'Hanken Grotesk',system-ui,sans-serif; --btn-r:999px; }
+.b2 h1, .b2 h2 { font-weight:400; letter-spacing:-.01em; }
+.b2 #price, .b2 .total strong, .b2 .sticky-cta b, .b2 .sdate b, .b2 .person .ph { font-weight:400; }
+.b2 .top { background:#fff; }
+.b2 .herowrap { background:var(--accent); color:#fff; }
+.b2 .herowrap .event { padding-block: clamp(2rem,6vw,4rem); }
+.b2 .herowrap .desc, .b2 .herowrap .venue span, .b2 .herowrap dt, .b2 .herowrap .price-box s { color:#fff; }
+.b2 .herowrap .venue a { color:#fff; }
+.b2 .herowrap .facts div { background:#9f3817; border-color:#c9694a; }
+.b2 .herowrap .facts .price-box { background:#fff; border-color:#fff; color:var(--ink); }
+.b2 .herowrap .price-box dt { color:var(--muted); } .b2 .herowrap .price-box s { color:var(--muted); }
+.b2 .herowrap .btn { background:#fff; color:var(--accent); }
+.b2 .herowrap .badge { background:var(--accent); }
+.mosaic { display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; width:100%; }
+.mosaic span { aspect-ratio:3/4; display:grid; place-items:center; border-radius:12px; background:#9f3817; border:1px solid #c9694a; font:400 1.5rem var(--head); }
+.mosaic span:nth-child(3n+1) { background:#fff; color:var(--accent); }
+.mosaic span:nth-child(5n) { background:#2a1812; border-color:#2a1812; }
+@media (min-width:860px) { .b2 .event { grid-template-columns: 1fr 380px; } .b2 .mosaic { order:2; } }
+.b2 .sdate { background:var(--accent); }
