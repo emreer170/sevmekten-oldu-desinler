@@ -31,3 +31,7 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 .b3 .person .info { padding-inline:0; }
 .b3 .media { margin-top: 2.5rem; }
 .b3 .media img, .b3 .media video { display: block; width: 100%; max-height: 640px; object-fit: cover; background: #151515; }
+
+.b3 .sessions { display: grid; gap: 2rem; border-top: 0; }
+.b3 .month h3 { font: 600 1.5rem var(--head); color: var(--accent); margin: 0 0 .5rem; }
+.b3 .month-list { border-top: 1px solid #151515; }

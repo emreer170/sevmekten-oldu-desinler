@@ -16,8 +16,18 @@ function renderSessions() {
   box.replaceChildren();
   $('noSessions').hidden = show.sessions.length > 0;
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  let group = null, lastMonth = '';
   show.sessions.forEach((s) => {
     const d = new Date(s.date + 'T12:00:00');
+    const month = d.toLocaleDateString('tr-TR', { month: 'long' });
+    if (month !== lastMonth) {
+      lastMonth = month;
+      const wrap = el('div', 'month');
+      wrap.append(el('h3', null, month));
+      group = el('div', 'month-list');
+      wrap.append(group);
+      box.append(wrap);
+    }
     const label = el('label', 'session' + (s.level === 'sold' ? ' full' : ''));
     const input = Object.assign(document.createElement('input'), { type: 'radio', name: 'session', value: s.id, disabled: s.level === 'sold' });
     input.onchange = () => { seats = Math.min(seats, s.available); updateTotal(); };
@@ -30,7 +40,7 @@ function renderSessions() {
     );
     const lvl = el('em', 'lvl ' + s.level, { sold: 'Tükendi', last: `Son ${s.left} bilet!`, few: 'Hızla tükeniyor', limited: 'Sınırlı sayıda' }[s.level]);
     label.append(input, date, info, lvl, el('i', 'tick', '✓'));
-    box.append(label);
+    group.append(label);
   });
 }
 function renderPage() {
@@ -55,7 +65,7 @@ function renderPage() {
   if (cast.length) {
     $('oyuncular').hidden = false;
     if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}`;
-    cast.forEach((p) => {
+    [...cast].sort((x, y) => x.name.localeCompare(y.name, 'tr')).forEach((p) => {
       const el = document.createElement('div');
       el.className = 'person';
       let pic;
