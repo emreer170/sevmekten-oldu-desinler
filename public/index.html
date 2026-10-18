@@ -5,9 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sevmekten Öldü Desinler! – Bilet Rezervasyonu</title>
 <meta name="description" content="Sevmekten Öldü Desinler tiyatro oyunu için tarih seçin, yerinizi ayırtın.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<nav class="nav">
+  <a href="#oyun">Oyun</a><a href="#oyuncular">Oyuncular</a><a href="#rezervasyon" class="nav-cta">Rezervasyon</a>
+</nav>
 <header class="hero">
   <p class="eyebrow">Tiyatro Oyunu</p>
   <h1 id="title">Sevmekten Öldü Desinler!</h1>
@@ -17,12 +23,12 @@
 </header>
 
 <main>
-  <section class="card" id="about">
+  <section class="card" id="oyun">
     <p id="description"></p>
     <dl class="facts">
       <div><dt>Süre</dt><dd id="duration"></dd></div>
       <div><dt>Yaş</dt><dd id="age"></dd></div>
-      <div><dt>Bilet</dt><dd><s id="oldPrice" hidden></s> <span id="price"></span><span id="badge" class="badge" hidden></span></dd></div>
+      <div class="price-box"><dt>Erken rezervasyon fiyatı</dt><dd><s id="oldPrice" hidden></s><span id="price"></span><span id="badge" class="badge" hidden></span></dd></div>
     </dl>
     <div class="venue">
       <strong id="venueName"></strong>
@@ -31,13 +37,15 @@
     </div>
   </section>
 
-  <section id="castSection" hidden>
+  <section id="oyuncular" class="section" hidden>
     <h2>Oyuncular</h2>
+    <p class="lead" id="directorLine"></p>
     <div class="cast" id="cast"></div>
   </section>
 
   <section class="card" id="rezervasyon">
     <h2>Rezervasyon</h2>
+    <p class="lead">Tarihinizi seçin, bilgilerinizi bırakın, yeriniz ayrılsın.</p>
     <form id="form" novalidate>
       <fieldset>
         <legend>1. Tarih seçin</legend>

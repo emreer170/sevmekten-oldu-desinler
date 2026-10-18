@@ -34,7 +34,7 @@ function renderPage() {
   document.title = `${play.title} – Bilet Rezervasyonu`;
   $('title').textContent = play.title;
   $('tagline').textContent = play.tagline;
-  if (play.director) { $('director').textContent = `Yönetmen: ${play.director}`; $('director').hidden = false; }
+  if (play.director) { $('director').textContent = `Yönetmen · ${play.director}`; $('director').hidden = false; }
   $('description').textContent = play.description;
   $('duration').textContent = play.duration;
   $('age').textContent = play.ageLimit;
@@ -49,13 +49,14 @@ function renderPage() {
   if (venue.mapUrl) { $('mapLink').href = venue.mapUrl; $('mapLink').hidden = false; }
   if (show.instagram) { $('insta').href = show.instagram; $('insta').hidden = false; }
   if (cast.length) {
-    $('castSection').hidden = false;
+    $('oyuncular').hidden = false;
+    if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}`;
     cast.forEach((p) => {
       const el = document.createElement('div');
       el.className = 'person';
       let pic;
       if (p.photo) { pic = document.createElement('img'); pic.src = p.photo; pic.alt = p.name; pic.loading = 'lazy'; }
-      else { pic = document.createElement('div'); pic.className = 'ph'; pic.textContent = p.name.charAt(0); }
+      else { pic = document.createElement('div'); pic.className = 'ph'; pic.textContent = p.name.split(' ').filter((w, i, a) => i === 0 || i === a.length - 1).map((w) => w.charAt(0)).join(''); }
       const info = document.createElement('div'); info.className = 'info';
       const n = document.createElement('strong'); n.textContent = p.name;
       const r = document.createElement('small'); r.textContent = p.role; r.hidden = !p.role;
