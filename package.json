@@ -4,7 +4,14 @@
   "private": true,
   "type": "module",
   "description": "Tek oyunluk tiyatro için bilet rezervasyon sitesi",
-  "scripts": { "start": "node server.js" },
-  "engines": { "node": ">=22.13" },
-  "dependencies": { "express": "^4.21.2" }
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "nodemailer": "^10.1.6"
+  }
 }

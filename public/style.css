@@ -22,7 +22,8 @@ dd { margin: 2px 0 0; font-weight: 600; }
 a { color: var(--accent-2); }
 .cast { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
 .person { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.person img, .person .ph { width: 100%; aspect-ratio: 1; object-fit: cover; background: #2a1a1e; display: grid; place-items: center; font-size: 2.4rem; color: var(--accent-2); }
+.person img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.person .ph { width: 100%; aspect-ratio: 3/1; object-fit: cover; background: #2a1a1e; display: grid; place-items: center; font-size: 2.4rem; color: var(--accent-2); }
 .person div.info { padding: 12px; }
 .person strong { display: block; }
 .person small { color: var(--accent-2); font-family: system-ui, sans-serif; }
@@ -60,3 +61,4 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 .iban { font: 600 1.05rem ui-monospace, monospace; word-break: break-all; }
 footer { text-align: center; color: var(--muted); font: 13px system-ui, sans-serif; padding: 0 16px 40px; display: grid; gap: 6px; }
 [hidden] { display: none !important; }
+.director{color:var(--accent-2);font-family:system-ui,sans-serif;margin:-14px 0 24px;font-size:15px}

@@ -3,6 +3,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, mkdirSync } from 'node:fs';
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import nodemailer from 'nodemailer';
 import path from 'node:path';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +18,30 @@ const DB_PATH = process.env.DB_PATH || path.join(root, 'data', 'rezervasyon.db')
 if (!ADMIN_PASSWORD) console.warn('UYARI: ADMIN_PASSWORD tanımlı değil, yönetici paneli kapalı.');
 
 mkdirSync(path.dirname(DB_PATH), { recursive: true });
+// E-posta (isteğe bağlı): SMTP_HOST, SMTP_USER, SMTP_PASS tanımlıysa onay maili gönderilir
+const mailer = process.env.SMTP_HOST
+  ? nodemailer.createTransport({
+      host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 465),
+      secure: (process.env.SMTP_PORT || '465') === '465',
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    })
+  : null;
+async function sendConfirmation({ to, name, code, session, seats, method }) {
+  if (!mailer || !to) return;
+  const when = new Date(session.date + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
+  const total = seats * config.price.amount;
+  const pay = method === 'havale'
+    ? `Ödeme: Havale/EFT ile ${total} ${config.price.currency}\nIBAN: ${config.payment.iban}\n${config.payment.accountName} - ${config.payment.bank}\n${config.payment.note}`
+    : `Ödeme: Gişede (${total} ${config.price.currency})`;
+  try {
+    await mailer.sendMail({
+      from: process.env.MAIL_FROM || process.env.SMTP_USER, to,
+      subject: `Rezervasyonunuz alındı – ${config.play.title} (${code})`,
+      text: `Merhaba ${name},\n\n${config.play.title} için rezervasyonunuz alındı.\n\nKod: ${code}\nTarih: ${when}, saat ${session.time}\nKişi: ${seats}\nYer: ${config.venue.name}, ${config.venue.address}\n${pay}\n\nGörüşmek üzere!`,
+    });
+  } catch (e) { console.error('E-posta gönderilemedi:', e.message); }
+}
+
 const db = new DatabaseSync(DB_PATH);
 db.exec(`
   CREATE TABLE IF NOT EXISTS reservations (
@@ -127,6 +152,7 @@ app.post('/api/reservations', (req, res) => {
       catch (e) { if (i === 4 || !/UNIQUE/.test(e.message)) throw e; }
     }
     db.exec('COMMIT');
+    sendConfirmation({ to: email, name, code, session, seats, method });
     res.json({
       ok: true, code, seats, method,
       total: seats * config.price.amount,

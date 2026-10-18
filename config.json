@@ -1,17 +1,21 @@
 {
   "play": {
-    "title": "Sevmekten Öldü Desinler",
+    "title": "Sevmekten Öldü Desinler!",
     "tagline": "Tek perdelik, unutulmaz bir akşam.",
     "description": "Oyunun kısa tanıtım metnini buraya yazın. Konusu, türü ve izleyiciye vaadi birkaç cümleyle anlatılabilir.",
     "duration": "90 dakika",
-    "ageLimit": "13+"
+    "ageLimit": "13+",
+    "director": "Tevfik Şahin"
   },
   "venue": {
-    "name": "Sahne Adı",
-    "address": "Mahalle, Sokak No: 1, İlçe / İl",
-    "mapUrl": ""
+    "name": "Butik Oyunculuk Atölyesi",
+    "address": "Acıbadem Mah. Sarayardı Cad. No:82 D:6, Çakmak İş Merkezi Kat:1, 34714 Kadıköy / İstanbul",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Butik%20Oyunculuk%20At%C3%B6lyesi%20Kad%C4%B1k%C3%B6y%20Sarayard%C4%B1%20Caddesi%2082"
   },
-  "price": { "amount": 300, "currency": "₺" },
+  "price": {
+    "amount": 300,
+    "currency": "₺"
+  },
   "payment": {
     "iban": "TR00 0000 0000 0000 0000 0000 00",
     "accountName": "Ad Soyad",
@@ -20,13 +24,125 @@
   },
   "instagram": "",
   "cast": [
-    { "name": "Oyuncu Bir", "role": "Rol Adı", "bio": "Kısa tanıtım yazısı.", "photo": "" },
-    { "name": "Oyuncu İki", "role": "Rol Adı", "bio": "Kısa tanıtım yazısı.", "photo": "" }
+    {
+      "name": "Emre Erçörekçi",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Emre Can Karayel",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Buse Güner",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Duru Öztunç",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Okan Kaynak",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Eda Çetinkaya",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Ezgi Selin Koçak",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Taha Berk Gürçay",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Furkan Birinci",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Ceren Ekşi",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Hüseyin Yalçınkaya",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Dilek Kara",
+      "role": "",
+      "bio": "",
+      "photo": ""
+    }
   ],
   "maxSeatsPerReservation": 6,
   "sessions": [
-    { "date": "2026-11-07", "time": "20:00", "capacity": 60 },
-    { "date": "2026-11-08", "time": "20:00", "capacity": 60 },
-    { "date": "2026-11-14", "time": "20:00", "capacity": 60 }
+    {
+      "date": "2026-10-31",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-11-07",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-11-14",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-11-21",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-11-28",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-12-05",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-12-12",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-12-19",
+      "time": "20:30",
+      "capacity": 60
+    },
+    {
+      "date": "2026-12-26",
+      "time": "20:30",
+      "capacity": 60
+    }
   ]
 }

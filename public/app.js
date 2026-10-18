@@ -32,6 +32,7 @@ function renderPage() {
   document.title = `${play.title} – Bilet Rezervasyonu`;
   $('title').textContent = play.title;
   $('tagline').textContent = play.tagline;
+  if (play.director) { $('director').textContent = `Yönetmen: ${play.director}`; $('director').hidden = false; }
   $('description').textContent = play.description;
   $('duration').textContent = play.duration;
   $('age').textContent = play.ageLimit;
@@ -50,8 +51,8 @@ function renderPage() {
       else { pic = document.createElement('div'); pic.className = 'ph'; pic.textContent = p.name.charAt(0); }
       const info = document.createElement('div'); info.className = 'info';
       const n = document.createElement('strong'); n.textContent = p.name;
-      const r = document.createElement('small'); r.textContent = p.role;
-      const b = document.createElement('p'); b.textContent = p.bio;
+      const r = document.createElement('small'); r.textContent = p.role; r.hidden = !p.role;
+      const b = document.createElement('p'); b.textContent = p.bio; b.hidden = !p.bio;
       info.append(n, r, b);
       el.append(pic, info);
       $('cast').append(el);
