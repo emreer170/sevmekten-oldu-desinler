@@ -7,6 +7,7 @@ import nodemailer from 'nodemailer';
 import path from 'node:path';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
+try { process.loadEnvFile(path.join(root, '.env')); } catch {} // .env varsa oku
 const config = JSON.parse(readFileSync(path.join(root, 'config.json'), 'utf8'));
 
 const PORT = process.env.PORT || 3000;
