@@ -5,7 +5,9 @@
     "description": "Oyunun kısa tanıtım metnini buraya yazın. Konusu, türü ve izleyiciye vaadi birkaç cümleyle anlatılabilir.",
     "duration": "90 dakika",
     "ageLimit": "13+",
-    "director": "Tevfik Şahin"
+    "director": "Tevfik Şahin",
+    "poster": "",
+    "video": ""
   },
   "venue": {
     "name": "Butik Oyunculuk Atölyesi",

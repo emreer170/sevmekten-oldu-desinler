@@ -2,19 +2,21 @@
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sevmekten Öldü Desinler! – Bilet Rezervasyonu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap"><link rel="stylesheet" href="/style.css"></head>
-<body class="v-a">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Onest:wght@400;500;600&display=swap"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/tema.css"></head>
+<body class="v-a b3">
 <header class="top"><a class="brand" href="#">Sevmekten Öldü Desinler!</a><nav><a href="#bilet">Biletler</a><a href="#oyuncular">Oyuncular</a></nav></header>
 <section class="event">
-  <div class="poster" aria-hidden="true"><span>Tiyatro</span><b>Sevmekten Öldü Desinler!</b><i>Yönetmen · Tevfik Şahin</i></div>
+  
   <div class="event-info">
     <h1 id="title">Sevmekten Öldü Desinler!</h1>
     <p id="tagline" hidden></p><p id="director" hidden></p>
+    <p class="range">31 Ekim – 26 Aralık · Her Cumartesi 20:30 · Kadıköy</p>
     <p id="description" class="desc"></p>
     <dl class="facts"><div><dt>Süre</dt><dd id="duration"></dd></div><div><dt>Yaş sınırı</dt><dd id="age"></dd></div>
         <div class="price-box"><dt>Erken rezervasyon fiyatı</dt><dd><s id="oldPrice" hidden></s><span id="price"></span><span id="badge" class="badge" hidden></span></dd></div></dl>
       <div class="venue"><strong id="venueName"></strong><span id="venueAddress"></span><a id="mapLink" hidden target="_blank" rel="noopener">Haritada aç</a></div>
     <a class="btn" href="#bilet">Bilet Al</a>
+    <div class="media" id="media" hidden></div>
   </div>
 </section>
 <main>

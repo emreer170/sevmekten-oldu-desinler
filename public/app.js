@@ -70,6 +70,15 @@ function renderPage() {
       $('cast').append(el);
     });
   }
+  const media = $('media');
+  if (play.video) {
+    const v = Object.assign(document.createElement('video'), { src: play.video, controls: true, playsInline: true, preload: 'metadata' });
+    if (play.poster) v.poster = play.poster;
+    media.append(v); media.hidden = false;
+  } else if (play.poster) {
+    const i = Object.assign(document.createElement('img'), { src: play.poster, alt: `${play.title} afişi` });
+    media.append(i); media.hidden = false;
+  }
   renderSessions();
   updateTotal();
 }
