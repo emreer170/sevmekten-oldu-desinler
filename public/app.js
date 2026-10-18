@@ -78,7 +78,7 @@ function renderPage() {
       let pic;
       if (p.photo) { pic = document.createElement('img'); pic.src = p.photo; pic.alt = p.name; pic.loading = 'lazy'; }
       else { pic = document.createElement('div'); pic.className = 'ph'; pic.textContent = p.name.split(' ').filter((w, i, a) => i === 0 || i === a.length - 1).map((w) => w.charAt(0)).join(''); }
-      const info = document.createElement('div'); info.className = 'info';
+      const info = document.createElement('div'); info.className = 'pinfo';
       const n = document.createElement('strong'); n.textContent = p.name;
       const r = document.createElement('small'); r.textContent = p.role; r.hidden = !p.role;
       const b = document.createElement('p'); b.textContent = p.bio; b.hidden = !p.bio;

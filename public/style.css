@@ -91,9 +91,9 @@ input:not([type=radio]):focus { border-color: var(--accent); outline: none; box-
 .person { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; text-align: center; }
 .person img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; }
 .person .ph { width: 4.25rem; height: 4.25rem; margin: 1.25rem auto .25rem; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); border: 1px solid var(--line); font: 700 1.2rem var(--head); color: var(--accent); }
-.person .info { padding: .75rem .75rem 1.125rem; }
+.person .pinfo { padding: .75rem .75rem 1.125rem; }
 .person strong { display: block; font-size: .9375rem; font-weight: 600; line-height: 1.35; }
-.person small { display: block; color: var(--accent); font-size: .75rem; }
+.person small { display: block; color: var(--accent); font-size: .75rem;  font-weight: 600; margin-top: .125rem; }
 .person p { color: var(--muted); font-size: .8125rem; margin: .5rem 0 0; }
 
 footer { text-align: center; color: var(--muted); font-size: .8125rem; padding: 2rem 1rem 3rem; border-top: 1px solid var(--line); display: grid; gap: .5rem; }
