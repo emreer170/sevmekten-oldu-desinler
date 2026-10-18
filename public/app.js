@@ -30,7 +30,14 @@ function renderSessions() {
     }
     const label = el('label', 'session' + (s.level === 'sold' ? ' full' : ''));
     const input = Object.assign(document.createElement('input'), { type: 'radio', name: 'session', value: s.id, disabled: s.level === 'sold' });
-    input.onchange = () => { seats = Math.min(seats, s.available); updateTotal(); };
+    input.onchange = () => {
+      seats = Math.min(seats, s.available);
+      updateTotal();
+      // tarih seçilince bir sonraki adıma (kişi sayısı ve bilgiler) geç
+      const next = $('adim2');
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(() => next.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' }), 250);
+    };
     const date = el('div', 'sdate');
     date.append(el('b', null, d.getDate()), el('small', null, d.toLocaleDateString('tr-TR', { month: 'short' }).replace('.', '')));
     const info = el('div', 'sinfo');
