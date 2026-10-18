@@ -41,8 +41,8 @@
       </fieldset>
       <fieldset>
         <legend><span class="n">4</span> Ödeme</legend>
-        <label class="choice"><input type="radio" name="paymentMethod" value="gise" checked><span><strong>Gişede öde</strong><small>Oyun günü gişede nakit veya kartla.</small></span></label>
-        <label class="choice"><input type="radio" name="paymentMethod" value="havale"><span><strong>Havale / EFT</strong><small>IBAN bilgisi bir sonraki adımda gösterilir.</small></span></label>
+        <label class="choice"><input type="radio" name="paymentMethod" value="gise" checked><span><strong>Gişede öde</strong><small>Oyun günü gişede yalnızca nakit ödeme alınır.</small></span></label>
+        <label class="choice disabled" aria-disabled="true"><input type="radio" name="paymentMethod" value="havale" disabled><span><strong>Online ödeme / Havale <em class="soon">Yakında</em></strong><small>Havale ile ödeme çok yakında açılacak.</small></span></label>
       </fieldset>
       <div class="total"><span>Toplam</span><strong id="total">—</strong></div>
       <p id="error" class="error" role="alert" hidden></p>

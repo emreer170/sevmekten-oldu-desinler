@@ -89,6 +89,13 @@ function renderPage() {
     const i = Object.assign(document.createElement('img'), { src: play.poster, alt: `${play.title} afişi` });
     media.append(i); media.hidden = false;
   }
+  if (show.payment.onlineEnabled) {
+    const online = document.querySelector('.choice.disabled');
+    online.classList.remove('disabled'); online.removeAttribute('aria-disabled');
+    online.querySelector('input').disabled = false;
+    online.querySelector('.soon')?.remove();
+    online.querySelector('small').textContent = 'IBAN bilgisi bir sonraki adımda gösterilir.';
+  }
   renderSessions();
   updateTotal();
 }
@@ -118,7 +125,7 @@ $('form').addEventListener('submit', async (e) => {
     $('form').hidden = true;
     $('done').hidden = false;
     $('code').textContent = data.code;
-    $('summary').textContent = `${fmtDate(data.session.date)}, saat ${data.session.time} · ${data.seats} kişi · ${money(data.total, show.price.currency)} · ${data.method === 'havale' ? 'Havale ile ödenecek' : 'Gişede ödenecek'}`;
+    $('summary').textContent = `${fmtDate(data.session.date)}, saat ${data.session.time} · ${data.seats} kişi · ${money(data.total, show.price.currency)} · ${data.method === 'havale' ? 'Havale ile ödenecek' : 'Gişede nakit ödenecek'}`;
     if (data.method === 'havale') {
       $('bank').hidden = false;
       $('iban').textContent = show.payment.iban;

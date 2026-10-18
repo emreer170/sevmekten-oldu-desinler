@@ -32,7 +32,7 @@ async function sendConfirmation({ to, name, code, session, seats, method }) {
   const total = seats * config.price.amount;
   const pay = method === 'havale'
     ? `Ödeme: Havale/EFT ile ${total} ${config.price.currency}\nIBAN: ${config.payment.iban}\n${config.payment.accountName} - ${config.payment.bank}\n${config.payment.note}`
-    : `Ödeme: Gişede (${total} ${config.price.currency})`;
+    : `Ödeme: Gişede nakit (${total} ${config.price.currency})`;
   try {
     await mailer.sendMail({
       from: process.env.MAIL_FROM || process.env.SMTP_USER, to,
@@ -109,7 +109,7 @@ function publicShow() {
   return {
     play: config.play, venue: config.venue, price: config.price, instagram: config.instagram,
     cast: config.cast, maxSeats: config.maxSeatsPerReservation,
-    payment: { iban: config.payment.iban, accountName: config.payment.accountName, bank: config.payment.bank, note: config.payment.note },
+    payment: { onlineEnabled: !!config.payment.onlineEnabled, iban: config.payment.iban, accountName: config.payment.accountName, bank: config.payment.bank, note: config.payment.note },
     // Gerçek kontenjan ve kalan sayı gizli tutulur; ziyaretçiye yalnızca seviye gösterilir
     sessions: sessions.filter((s) => !isPast(s)).map((s) => {
       const remaining = Math.max(0, s.capacity - seatsTaken.get(s.id).n);
@@ -141,7 +141,8 @@ app.post('/api/reservations', (req, res) => {
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'E-posta adresi geçersiz.' });
   if (!Number.isInteger(seats) || seats < 1 || seats > config.maxSeatsPerReservation)
     return res.status(400).json({ error: `Kişi sayısı 1 ile ${config.maxSeatsPerReservation} arasında olmalı.` });
-  if (!['gise', 'havale'].includes(method)) return res.status(400).json({ error: 'Ödeme yöntemini seçin.' });
+  const allowed = config.payment.onlineEnabled ? ['gise', 'havale'] : ['gise'];
+  if (!allowed.includes(method)) return res.status(400).json({ error: 'Online ödeme henüz açık değil, gişede nakit ödeme seçin.' });
 
   // tek süreç ve eşzamanlı olmayan sürücü: kontrol + ekleme bölünemez
   db.exec('BEGIN IMMEDIATE');
@@ -229,7 +230,7 @@ app.get('/api/admin/export.csv', requireAdmin, (_req, res) => {
   const lines = rows.map((r) => {
     const s = sessionById.get(r.session_id);
     return [r.code, s?.date, s?.time, r.name, r.surname, r.phone, r.email, r.seats,
-      r.payment_method === 'havale' ? 'Havale' : 'Gişe', r.paid ? 'Evet' : 'Hayır', r.note, r.created_at].map(esc).join(',');
+      r.payment_method === 'havale' ? 'Havale' : 'Gişe (nakit)', r.paid ? 'Evet' : 'Hayır', r.note, r.created_at].map(esc).join(',');
   });
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', 'attachment; filename="rezervasyonlar.csv"');

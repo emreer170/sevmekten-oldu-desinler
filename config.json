@@ -24,7 +24,8 @@
     "iban": "TR00 0000 0000 0000 0000 0000 00",
     "accountName": "Ad Soyad",
     "bank": "Banka Adı",
-    "note": "Açıklama kısmına rezervasyon kodunuzu yazmanız yeterli."
+    "note": "Açıklama kısmına rezervasyon kodunuzu yazmanız yeterli.",
+    "onlineEnabled": false
   },
   "instagram": "",
   "cast": [

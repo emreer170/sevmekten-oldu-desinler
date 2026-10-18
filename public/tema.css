@@ -35,3 +35,6 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 .b3 .sessions { display: grid; gap: 2rem; border-top: 0; }
 .b3 .month h3 { font: 600 1.5rem var(--head); color: var(--accent); margin: 0 0 .5rem; }
 .b3 .month-list { border-top: 1px solid #151515; }
+
+.b3 .choice.disabled { opacity: .6; cursor: not-allowed; background: var(--surface-2); border-color: var(--line); }
+.b3 .soon { font: 600 .75rem var(--body); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); padding: .1rem .45rem; margin-left: .5rem; vertical-align: middle; }
