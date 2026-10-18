@@ -1,0 +1,10 @@
+/* A1 · Zümrüt: serin beyaz zemin, koyu yeşil-mavi, kemer biçimli afiş */
+body.a1 { --bg:#f1f5f5; --surface:#fff; --surface-2:#f1f5f5; --ink:#0f1f1f; --muted:#4f6362; --line:#dbe5e4; --line-strong:#b8c8c6;
+  --accent:#0a6b61; --accent-ink:#fff; --accent-soft:#dff1ee; --head:Outfit,system-ui,sans-serif; --body:Figtree,system-ui,sans-serif; }
+.a1 .poster { background:#0a2b28; color:#eaf6f4; border-radius: 999px 999px 16px 16px; padding-top: 3rem; }
+.a1 .poster::before { right:auto; left:50%; top:1.25rem; width:40%; translate:-50% 0; background:#e3b04b; border-radius:50%; }
+.a1 .poster span { left:50%; translate:-50% 0; top:auto; bottom:auto; color:#0a2b28; z-index:1; top:2.25rem; letter-spacing:.2em; font-size:.75rem; }
+.a1 .poster b { text-align:center; } .a1 .poster i { text-align:center; }
+.a1 .sdate { background:#0a2b28; }
+.a1 .btn { border-radius:999px; }
+.a1 .top { background: #0a2b28; border: 0; } .a1 .brand { color:#eaf6f4; } .a1 nav a { color:#a9c9c4; }

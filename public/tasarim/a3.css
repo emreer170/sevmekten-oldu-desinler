@@ -1,0 +1,18 @@
+/* A3 · Kadife: gül-erik tonu, serif başlık, delikli bilet kartları */
+body.a3 { --bg:#f6f2f4; --surface:#fff; --surface-2:#f6f2f4; --ink:#241420; --muted:#6a5663; --line:#e8dde3; --line-strong:#cdbcc6;
+  --accent:#a3174d; --accent-ink:#fff; --accent-soft:#f9e3ec; --head:'DM Serif Display',Georgia,serif; --body:'DM Sans',system-ui,sans-serif; --btn-r:999px; }
+.a3 h1, .a3 h2, .a3 .brand, .a3 #price, .a3 .total strong, .a3 .sticky-cta b { font-weight:400; letter-spacing:0; }
+.a3 h1 { font-size:clamp(2.5rem,7vw,4rem); }
+.a3 .poster { background:#2b0f22; color:#fbeaf1; }
+.a3 .poster::before { background:linear-gradient(160deg,#a3174d,#e0577f); right:-30%; }
+.a3 .poster b { font-weight:400; letter-spacing:0; }
+.a3 .top { background:#fff; }
+.a3 .sdate { background:#2b0f22; } .a3 .sdate b { font-weight:400; font-size:1.75rem; }
+.a3 .session { grid-template-columns: 4.25rem 1fr auto; gap: 0 1rem; padding: 0 3rem 0 0; border-radius:10px; overflow:hidden; }
+.a3 .session::before, .a3 .session::after { content:''; position:absolute; left:calc(4.25rem - .5rem); width:1rem; height:1rem; border-radius:50%; background:var(--surface); border:1px solid var(--line-strong); z-index:2; }
+.a3 .session::before { top:-.5rem; } .a3 .session::after { bottom:-.5rem; }
+.a3 .session:has(input:checked)::before, .a3 .session:has(input:checked)::after { background:var(--accent-soft); border-color:var(--accent); }
+.a3 .sdate { align-self:stretch; display:grid; place-content:center; width:auto; border-radius:0; border-right:2px dashed var(--bg); }
+.a3 .sinfo { padding:.875rem 0; }
+.a3 .session:has(input:checked) .sdate { background:var(--accent); }
+@media (max-width:520px) { .a3 .session { grid-template-columns:4.25rem 1fr; grid-template-areas:"date info" "date lvl"; } .a3 .lvl { margin: 0 0 .875rem; } }

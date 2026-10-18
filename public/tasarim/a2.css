@@ -1,0 +1,26 @@
+/* A2 · Sarı-siyah: yüksek kontrast, tam genişlik afiş, köşeli sert kartlar */
+body.a2 { --bg:#fff; --surface:#fff; --surface-2:#f4f4f1; --ink:#111; --muted:#4a4a46; --line:#e2e2dc; --line-strong:#111;
+  --accent:#111; --accent-ink:#ffd400; --accent-soft:#fff6bf; --head:Archivo,system-ui,sans-serif; --body:Figtree,system-ui,sans-serif; --btn-r:0; --card-r:0; }
+.a2 .top { background:#111; border:0; } .a2 .brand { color:#ffd400; } .a2 nav a { color:#d6d6d0; }
+.a2 .event { max-width:none; padding:0; gap:0; } 
+.a2 .poster { max-height:none; aspect-ratio:auto; min-height: 260px; border-radius:0; background:#ffd400; color:#111; padding:2rem clamp(1.25rem,5vw,4rem); justify-content:flex-end; }
+.a2 .poster::before { display:none; }
+.a2 .poster span { position:static; font-weight:800; letter-spacing:.2em; border-bottom:3px solid #111; align-self:flex-start; padding-bottom:.25rem; margin-bottom:auto; }
+.a2 .poster b { font:900 clamp(2.5rem,11vw,6rem)/.92 var(--head); letter-spacing:-.03em; text-transform:uppercase; }
+.a2 .poster i { color:#111; opacity:1; font-weight:600; }
+.a2 .event-info { padding: clamp(1.5rem,4vw,3rem) clamp(1.25rem,5vw,4rem); max-width:960px; margin:0 auto; width:100%; }
+.a2 .event-info h1 { display:none; }
+.a2 .facts div { border-radius:0; border-width:2px; border-color:#111; }
+.a2 .facts .price-box { background:#ffd400; border-color:#111; }
+.a2 #price { color:#111; } .a2 .badge { background:#111; color:#ffd400; border-radius:0; }
+.a2 .btn { text-transform:uppercase; letter-spacing:.08em; }
+.a2 .session { border:2px solid #111; border-radius:0; }
+.a2 .session:has(input:checked) { box-shadow: 5px 5px 0 #111; background:#fff6bf; border-color:#111; }
+.a2 .sdate { border-radius:0; background:#111; color:#ffd400; }
+.a2 .lvl { border-radius:0; background:#111; color:#ffd400; }
+.a2 .tick { border-radius:0; border-color:#111; } .a2 .session:has(input:checked) .tick { background:#111; color:#ffd400; }
+.a2 #bilet { border:2px solid #111; box-shadow: 8px 8px 0 #111; }
+.a2 input:not([type=radio]), .a2 .stepper, .a2 .choice { border:2px solid #111; border-radius:0; }
+.a2 legend .n { border-radius:0; } .a2 .person { border-radius:0; } .a2 .person .ph { border-radius:0; background:#ffd400; color:#111; }
+.a2 .sticky-cta .btn { padding-inline:1.5rem; }
+@media (min-width: 860px) { .a2 .event { display:block; } }
