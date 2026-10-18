@@ -13,7 +13,8 @@
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=Butik%20Oyunculuk%20At%C3%B6lyesi%20Kad%C4%B1k%C3%B6y%20Sarayard%C4%B1%20Caddesi%2082"
   },
   "price": {
-    "amount": 300,
+    "amount": 250,
+    "oldAmount": 500,
     "currency": "₺"
   },
   "payment": {
@@ -102,47 +103,47 @@
     {
       "date": "2026-10-31",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-11-07",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-11-14",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-11-21",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-11-28",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-12-05",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-12-12",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-12-19",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     },
     {
       "date": "2026-12-26",
       "time": "20:30",
-      "capacity": 60
+      "capacity": 43
     }
   ]
 }

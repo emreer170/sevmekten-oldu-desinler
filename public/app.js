@@ -17,12 +17,14 @@ function renderSessions() {
   $('noSessions').hidden = show.sessions.length > 0;
   show.sessions.forEach((s) => {
     const label = document.createElement('label');
-    label.className = 'session' + (s.remaining === 0 ? ' full' : '');
-    const input = Object.assign(document.createElement('input'), { type: 'radio', name: 'session', value: s.id, disabled: s.remaining === 0 });
+    label.className = 'session' + (s.level === 'sold' ? ' full' : '');
+    const input = Object.assign(document.createElement('input'), { type: 'radio', name: 'session', value: s.id, disabled: s.level === 'sold' });
+    input.onchange = () => { seats = Math.min(seats, s.available); updateTotal(); };
     const text = document.createElement('span');
     text.textContent = `${fmtDate(s.date)} · ${s.time}`;
     const left = document.createElement('small');
-    left.textContent = s.remaining === 0 ? 'Doldu' : s.remaining <= 10 ? `Son ${s.remaining} yer` : '';
+    left.textContent = { sold: 'Biletler tükendi', last: `Son ${s.left} bilet!`, few: 'Hızla tükeniyor', limited: 'Sınırlı sayıda bilet' }[s.level];
+    left.className = 'lvl ' + s.level;
     label.append(input, text, left);
     box.append(label);
   });
@@ -37,6 +39,11 @@ function renderPage() {
   $('duration').textContent = play.duration;
   $('age').textContent = play.ageLimit;
   $('price').textContent = money(price.amount, price.currency);
+  if (price.oldAmount > price.amount) {
+    $('oldPrice').textContent = money(price.oldAmount, price.currency);
+    $('badge').textContent = `%${Math.round((1 - price.amount / price.oldAmount) * 100)} İNDİRİM`;
+    $('oldPrice').hidden = $('badge').hidden = false;
+  }
   $('venueName').textContent = venue.name;
   $('venueAddress').textContent = venue.address;
   if (venue.mapUrl) { $('mapLink').href = venue.mapUrl; $('mapLink').hidden = false; }
@@ -68,7 +75,7 @@ async function load() {
 }
 
 $('minus').onclick = () => { seats = Math.max(1, seats - 1); updateTotal(); };
-$('plus').onclick = () => { seats = Math.min(show.maxSeats, seats + 1); updateTotal(); };
+$('plus').onclick = () => { seats = Math.min(selectedSession()?.available ?? show.maxSeats, seats + 1); updateTotal(); };
 
 $('form').addEventListener('submit', async (e) => {
   e.preventDefault();

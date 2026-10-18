@@ -110,10 +110,16 @@ function publicShow() {
     play: config.play, venue: config.venue, price: config.price, instagram: config.instagram,
     cast: config.cast, maxSeats: config.maxSeatsPerReservation,
     payment: { iban: config.payment.iban, accountName: config.payment.accountName, bank: config.payment.bank, note: config.payment.note },
-    sessions: sessions.filter((s) => !isPast(s)).map((s) => ({
-      id: s.id, date: s.date, time: s.time,
-      remaining: Math.max(0, s.capacity - seatsTaken.get(s.id).n),
-    })),
+    // Gerçek kontenjan ve kalan sayı gizli tutulur; ziyaretçiye yalnızca seviye gösterilir
+    sessions: sessions.filter((s) => !isPast(s)).map((s) => {
+      const remaining = Math.max(0, s.capacity - seatsTaken.get(s.id).n);
+      const level = remaining === 0 ? 'sold' : remaining <= 10 ? 'last' : remaining <= 25 ? 'few' : 'limited';
+      return {
+        id: s.id, date: s.date, time: s.time, level,
+        left: level === 'last' ? remaining : undefined,
+        available: Math.min(remaining, config.maxSeatsPerReservation),
+      };
+    }),
   };
 }
 app.get('/api/show', (_req, res) => res.json(publicShow()));

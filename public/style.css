@@ -62,3 +62,10 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid 
 footer { text-align: center; color: var(--muted); font: 13px system-ui, sans-serif; padding: 0 16px 40px; display: grid; gap: 6px; }
 [hidden] { display: none !important; }
 .director{color:var(--accent-2);font-family:system-ui,sans-serif;margin:-14px 0 24px;font-size:15px}
+
+dd s { color: var(--muted); font-weight: 400; margin-right: 4px; }
+.badge { display: block; margin-top: 4px; background: var(--accent); color: #fff; border-radius: 999px; font: 700 10px system-ui, sans-serif; padding: 2px 8px; letter-spacing: .05em; }
+.lvl { font-weight: 600; font-size: 13px; white-space: nowrap; }
+.lvl.limited { color: var(--accent-2); }
+.lvl.few, .lvl.last { color: #ff6b76; }
+.session small.lvl { color: inherit; }
