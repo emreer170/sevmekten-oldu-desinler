@@ -1,0 +1,32 @@
+{
+  "play": {
+    "title": "Sevmekten Öldü Desinler",
+    "tagline": "Tek perdelik, unutulmaz bir akşam.",
+    "description": "Oyunun kısa tanıtım metnini buraya yazın. Konusu, türü ve izleyiciye vaadi birkaç cümleyle anlatılabilir.",
+    "duration": "90 dakika",
+    "ageLimit": "13+"
+  },
+  "venue": {
+    "name": "Sahne Adı",
+    "address": "Mahalle, Sokak No: 1, İlçe / İl",
+    "mapUrl": ""
+  },
+  "price": { "amount": 300, "currency": "₺" },
+  "payment": {
+    "iban": "TR00 0000 0000 0000 0000 0000 00",
+    "accountName": "Ad Soyad",
+    "bank": "Banka Adı",
+    "note": "Açıklama kısmına rezervasyon kodunuzu yazmanız yeterli."
+  },
+  "instagram": "",
+  "cast": [
+    { "name": "Oyuncu Bir", "role": "Rol Adı", "bio": "Kısa tanıtım yazısı.", "photo": "" },
+    { "name": "Oyuncu İki", "role": "Rol Adı", "bio": "Kısa tanıtım yazısı.", "photo": "" }
+  ],
+  "maxSeatsPerReservation": 6,
+  "sessions": [
+    { "date": "2026-11-07", "time": "20:00", "capacity": 60 },
+    { "date": "2026-11-08", "time": "20:00", "capacity": 60 },
+    { "date": "2026-11-14", "time": "20:00", "capacity": 60 }
+  ]
+}

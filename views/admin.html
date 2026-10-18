@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Yönetim – Rezervasyonlar</title>
+<style>
+  :root { color-scheme: light dark; --line: #8884; --accent: #c8323f; }
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 0; padding: 16px; max-width: 1000px; margin-inline: auto; }
+  h1 { font-size: 1.3rem; } button, select, input { font: inherit; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: inherit; }
+  button { cursor: pointer; } button.primary { background: var(--accent); color: #fff; border: 0; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .c { border: 1px solid var(--line); border-radius: 10px; padding: 12px; cursor: pointer; } .c.sel { outline: 2px solid var(--accent); }
+  .c b { display: block; } .c .n { font-size: 1.6rem; font-weight: 700; } .c small { opacity: .7; }
+  .bar2 { height: 6px; background: var(--line); border-radius: 3px; margin-top: 6px; overflow: hidden; } .bar2 i { display: block; height: 100%; background: var(--accent); }
+  .wrap { overflow-x: auto; } table { border-collapse: collapse; width: 100%; min-width: 640px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; } th { font-size: 12px; text-transform: uppercase; opacity: .7; }
+  .code { font-family: ui-monospace, monospace; font-weight: 700; } .tag { padding: 2px 8px; border-radius: 999px; font-size: 12px; background: var(--line); }
+  .tag.ok { background: #2e7d3255; } #login { max-width: 320px; margin: 20vh auto; display: grid; gap: 10px; } #err { color: var(--accent); }
+  [hidden] { display: none !important; }
+  @media print { .bar button, .bar select, .cards, td:last-child, th:last-child { display: none; } }
+</style>
+</head>
+<body>
+<form id="login" hidden>
+  <h1>Yönetim girişi</h1>
+  <input type="password" id="pw" placeholder="Şifre" autocomplete="current-password" required>
+  <button class="primary">Giriş</button>
+  <div id="err"></div>
+</form>
+
+<div id="panel" hidden>
+  <div class="bar">
+    <h1>Rezervasyonlar</h1>
+    <div>
+      <input id="q" type="search" placeholder="İsim / telefon / kod ara">
+      <button id="print">Yazdır</button>
+      <a href="/api/admin/export.csv"><button type="button">CSV indir</button></a>
+      <button id="logout">Çıkış</button>
+    </div>
+  </div>
+  <div class="cards" id="cards"></div>
+  <div class="wrap"><table>
+    <thead><tr><th>Kod</th><th>Tarih</th><th>İsim</th><th>Telefon</th><th>Kişi</th><th>Ödeme</th><th></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <p id="empty" hidden>Kayıt yok.</p>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const fmt = (d) => new Date(d + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', weekday: 'short' });
+let data, filter = 'all';
+
+async function api(url, opt) {
+  const r = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opt });
+  if (r.status === 401 && !url.includes('login')) { show(false); throw new Error('auth'); }
+  return r;
+}
+function show(on) { $('login').hidden = on; $('panel').hidden = !on; }
+function el(tag, text, cls) { const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+
+async function load() {
+  const r = await fetch('/api/admin/data');
+  if (!r.ok) return show(false);
+  data = await r.json(); show(true); render();
+}
+function render() {
+  const cards = $('cards'); cards.replaceChildren();
+  const all = el('div', null, 'c' + (filter === 'all' ? ' sel' : ''));
+  all.append(el('b', 'Tümü'), el('span', data.sessions.reduce((a, s) => a + s.people, 0) + ' kişi', 'n'), el('small', data.reservations.length + ' rezervasyon'));
+  all.onclick = () => { filter = 'all'; render(); }; cards.append(all);
+  data.sessions.forEach((s) => {
+    const c = el('div', null, 'c' + (filter === s.id ? ' sel' : ''));
+    const bar = el('div', null, 'bar2'), i = document.createElement('i'); i.style.width = Math.min(100, s.people / s.capacity * 100) + '%'; bar.append(i);
+    c.append(el('b', `${fmt(s.date)} · ${s.time}`), el('span', `${s.people} / ${s.capacity}`, 'n'), el('small', `${s.reservations} rezervasyon · ${s.paidPeople} kişi ödedi`), bar);
+    c.onclick = () => { filter = s.id; render(); }; cards.append(c);
+  });
+  const q = $('q').value.trim().toLowerCase();
+  const sess = Object.fromEntries(data.sessions.map((s) => [s.id, s]));
+  const rows = data.reservations.filter((r) => (filter === 'all' || r.session_id === filter) &&
+    (!q || `${r.name} ${r.surname} ${r.phone} ${r.code} ${r.email || ''}`.toLowerCase().includes(q)));
+  const tb = $('rows'); tb.replaceChildren(); $('empty').hidden = rows.length > 0;
+  rows.forEach((r) => {
+    const s = sess[r.session_id], tr = document.createElement('tr');
+    const who = el('td', `${r.name} ${r.surname}`);
+    if (r.email) who.append(document.createElement('br'), el('small', r.email));
+    if (r.note) who.append(document.createElement('br'), el('small', '“' + r.note + '”'));
+    const phone = el('td'); const a = el('a', r.phone); a.href = 'tel:' + r.phone.replace(/[^+\d]/g, ''); phone.append(a);
+    const pay = el('td'); pay.append(el('span', (r.payment_method === 'havale' ? 'Havale' : 'Gişe') + (r.paid ? ' · ödendi' : ' · bekliyor'), 'tag' + (r.paid ? ' ok' : '')));
+    const act = el('td');
+    const tog = el('button', r.paid ? 'Ödenmedi yap' : 'Ödendi işaretle');
+    tog.onclick = async () => { await api('/api/admin/reservations/' + r.id, { method: 'PATCH', body: JSON.stringify({ paid: !r.paid }) }); load(); };
+    const del = el('button', 'Sil');
+    del.onclick = async () => { if (confirm(`${r.name} ${r.surname} rezervasyonu silinsin mi?`)) { await api('/api/admin/reservations/' + r.id, { method: 'DELETE' }); load(); } };
+    act.append(tog, ' ', del);
+    tr.append(el('td', r.code, 'code'), el('td', s ? `${fmt(s.date)} ${s.time}` : r.session_id), who, phone, el('td', r.seats), pay, act);
+    tb.append(tr);
+  });
+}
+$('login').onsubmit = async (e) => {
+  e.preventDefault();
+  const r = await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: $('pw').value }) });
+  if (r.ok) { $('pw').value = ''; $('err').textContent = ''; load(); } else $('err').textContent = (await r.json()).error;
+};
+$('logout').onclick = async () => { await fetch('/api/admin/logout', { method: 'POST' }); show(false); };
+$('q').oninput = render; $('print').onclick = () => print();
+load();
+setInterval(() => { if (!$('panel').hidden && document.visibilityState === 'visible') load(); }, 30000);
+</script>
+</body>
+</html>
