@@ -1,13 +1,14 @@
 {
   "play": {
     "title": "Sevmekten Öldü Desinler!",
-    "tagline": "Sevmenin, kaybetmenin ve geç kalmanın oyunu.",
-    "description": "Sevmekten Öldü Desinler!, sevgi ve kayıp üzerine kurulu bir tiyatro oyunu. On iki kişilik oyuncu kadrosu, seyirciyi hikâyenin hemen yanı başına, sahnenin yakın mesafesine çağırıyor.\nKadıköy'deki Butik Oyunculuk Atölyesi'nde, küçük salonun samimiyetiyle her cumartesi akşamı 20:30'da perde açılıyor. Salon kapasitesi sınırlı olduğu için biletinizi önceden ayırtmanızı öneririz.",
+    "tagline": "Bir kenar mahalle masalı: sevmenin, kaçmanın ve şarkı söylemenin müzikli hikâyesi.",
+    "description": "İstanbul'un bir kenar mahallesinde yaşayan Gönül, evinden, mahallesinden ve sevdiği adamdan kaçıp Butik Pavyon'un sahnesine çıkıyor: bir gün Sibel Can olacak. Peşinden Mustafa'nın yarım kalan besteleri, Sevda'nın her şeye yetişen merakı, Hamdi'nin kükremeleri ve Ahmet'in şöhret hırsı geliyor.\nMüzikli, kara mizahlı, yer yer sahneyle kavga eden bir masal: seyirciye doğrudan konuşan karakterler, Dış Ses'in araya girmeleri ve hepsi bir ağızdan söylenen şarkılar. Güldürürken boğazınıza da bir şeyler takılabilir.\nKadıköy'deki Butik Oyunculuk Atölyesi'nde, küçük salonun samimiyetiyle her cumartesi akşamı 20:30'da perde açılıyor. Salon kapasitesi sınırlı olduğu için biletinizi önceden ayırtmanızı öneririz.",
     "duration": "90 dakika",
     "ageLimit": "13+",
     "director": "Tevfik Şahin",
     "poster": "",
-    "video": ""
+    "video": "",
+    "author": "Murat Mahmutyazıcıoğlu"
   },
   "venue": {
     "name": "Butik Oyunculuk Atölyesi",
