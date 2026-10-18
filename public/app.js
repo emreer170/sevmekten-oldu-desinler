@@ -15,17 +15,21 @@ function renderSessions() {
   const box = $('sessions');
   box.replaceChildren();
   $('noSessions').hidden = show.sessions.length > 0;
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   show.sessions.forEach((s) => {
-    const label = document.createElement('label');
-    label.className = 'session' + (s.level === 'sold' ? ' full' : '');
+    const d = new Date(s.date + 'T12:00:00');
+    const label = el('label', 'session' + (s.level === 'sold' ? ' full' : ''));
     const input = Object.assign(document.createElement('input'), { type: 'radio', name: 'session', value: s.id, disabled: s.level === 'sold' });
     input.onchange = () => { seats = Math.min(seats, s.available); updateTotal(); };
-    const text = document.createElement('span');
-    text.textContent = `${fmtDate(s.date)} · ${s.time}`;
-    const left = document.createElement('small');
-    left.textContent = { sold: 'Biletler tükendi', last: `Son ${s.left} bilet!`, few: 'Hızla tükeniyor', limited: 'Sınırlı sayıda bilet' }[s.level];
-    left.className = 'lvl ' + s.level;
-    label.append(input, text, left);
+    const date = el('div', 'sdate');
+    date.append(el('b', null, d.getDate()), el('small', null, d.toLocaleDateString('tr-TR', { month: 'short' }).replace('.', '')));
+    const info = el('div', 'sinfo');
+    info.append(
+      el('strong', null, d.toLocaleDateString('tr-TR', { weekday: 'long' }) + ' · ' + s.time),
+      el('span', null, `${show.venue.name}${show.venue.city ? ', ' + show.venue.city : ''}`),
+    );
+    const lvl = el('em', 'lvl ' + s.level, { sold: 'Tükendi', last: `Son ${s.left} bilet!`, few: 'Hızla tükeniyor', limited: 'Sınırlı sayıda' }[s.level]);
+    label.append(input, date, info, lvl, el('i', 'tick', '✓'));
     box.append(label);
   });
 }

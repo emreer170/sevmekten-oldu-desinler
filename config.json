@@ -10,7 +10,8 @@
   "venue": {
     "name": "Butik Oyunculuk Atölyesi",
     "address": "Acıbadem Mah. Sarayardı Cad. No:82 D:6, Çakmak İş Merkezi Kat:1, 34714 Kadıköy / İstanbul",
-    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Butik%20Oyunculuk%20At%C3%B6lyesi%20Kad%C4%B1k%C3%B6y%20Sarayard%C4%B1%20Caddesi%2082"
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Butik%20Oyunculuk%20At%C3%B6lyesi%20Kad%C4%B1k%C3%B6y%20Sarayard%C4%B1%20Caddesi%2082",
+    "city": "Kadıköy / İstanbul"
   },
   "price": {
     "amount": 250,
