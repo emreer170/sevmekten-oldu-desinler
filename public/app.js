@@ -56,7 +56,7 @@ function renderPage() {
   $('title').textContent = play.title;
   $('tagline').textContent = play.tagline;
   if (play.director) { $('director').textContent = `Yönetmen · ${play.director}`; $('director').hidden = false; }
-  $('description').textContent = play.description;
+  $('description').replaceChildren(...play.description.split('\n').filter(Boolean).map((t) => Object.assign(document.createElement('p'), { textContent: t })));
   $('duration').textContent = play.duration;
   $('age').textContent = play.ageLimit;
   $('price').textContent = money(price.amount, price.currency);

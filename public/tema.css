@@ -1,11 +1,11 @@
 /* B3 · Sade: tamamen tipografik, ince çizgiler, tek vurgu rengi (kültür kurumu havası) */
 body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted:#5b5b57; --line:#e4e4e0; --line-strong:#151515;
   --accent:#c4161c; --accent-ink:#fff; --accent-soft:#fdeeee; --head:Newsreader,Georgia,serif; --body:Onest,system-ui,sans-serif; --btn-r:2px; --card-r:0; }
-.b3 h1 { font-weight:500; letter-spacing:-.025em; font-size:clamp(3rem,10vw,6.5rem); line-height:.95; max-width:12ch; }
+.b3 h1 { font-weight:500; letter-spacing:-.02em; font-size:clamp(2.25rem,5vw,3.5rem); line-height:1.05; max-width:16ch; margin-bottom:.75rem; }
 .b3 h2 { font-weight:500; } .b3 #price, .b3 .total strong, .b3 .sticky-cta b, .b3 .sdate b { font-weight:600; }
 .b3 .top { background:#fff; border-bottom:1px solid #151515; }
 .b3 .brand { font-family:var(--head); font-weight:600; }
-.b3 .event { display:block; padding-top: clamp(2.5rem,8vw,5.5rem); max-width:1040px; }
+.b3 .event { display:block; padding-top: clamp(1.5rem,4vw,3rem); padding-bottom: 1rem; max-width:1040px; }
 .b3 .range { font:italic 500 1.375rem var(--head); color:var(--accent); margin-bottom:1.25rem; }
 .b3 .desc { max-width:50ch; font-size:1.125rem; }
 .b3 .facts { grid-template-columns:repeat(3,1fr); gap:0; border-block:1px solid #151515; margin:2rem 0; }
@@ -38,3 +38,21 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 
 .b3 .choice.disabled { opacity: .6; cursor: not-allowed; background: var(--surface-2); border-color: var(--line); }
 .b3 .soon { font: 600 .75rem var(--body); font-style: normal; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); padding: .1rem .45rem; margin-left: .5rem; vertical-align: middle; }
+
+/* üst bölüm: solda başlık ve tanıtım, sağda oyun bilgileri */
+.b3 .event-info { display: grid; gap: 2rem; }
+@media (min-width: 900px) { .b3 .event-info { grid-template-columns: 1.3fr 1fr; gap: 3.5rem; align-items: start; } }
+.b3 .tagline { font: italic 500 1.375rem/1.35 var(--head); color: var(--accent); margin: 0 0 1.25rem; }
+.b3 .hero-main .desc { max-width: 52ch; font-size: 1.0625rem; }
+.b3 .hero-main .desc p { margin: 0 0 .875rem; }
+.b3 .by { font-size: .875rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 1rem 0 1.25rem; }
+.b3 .info { margin: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid #151515; }
+.b3 .info > div { padding: .875rem 0; border-bottom: 1px solid var(--line); grid-column: 1 / -1; }
+.b3 .info > .half { grid-column: auto; }
+.b3 .info > .half + .half { padding-left: 1.25rem; border-left: 1px solid var(--line); }
+.b3 .info dt { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.b3 .info dd { margin: .125rem 0 0; font-weight: 600; }
+.b3 .info dd small { display: block; font-weight: 400; color: var(--muted); font-size: .9375rem; }
+.b3 .info dd a { display: inline-block; margin-top: .25rem; font-size: .875rem; font-weight: 600; }
+.b3 .info .price-box { background: var(--accent-soft); padding: .875rem 1rem; border-bottom: 2px solid #151515; }
+.b3 .info .price-box dd { display: flex; align-items: center; gap: .625rem; flex-wrap: wrap; }
