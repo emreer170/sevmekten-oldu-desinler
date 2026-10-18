@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sevmekten Öldü Desinler! – Gece sahnesi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600&display=swap"><link rel="stylesheet" href="c.css"></head>
+<body class="v-c">
+<header class="top"><a class="brand" href="#">S.Ö.D.</a><nav><a href="#oyuncular">Oyuncular</a><a href="#bilet" class="nav-cta">Rezervasyon</a></nav></header>
+<section class="hero">
+  <h1 id="title">Sevmekten Öldü Desinler!</h1>
+  <p id="tagline" hidden></p><p id="director" hidden></p>
+  <p class="by">Tiyatro Oyunu · Yönetmen Tevfik Şahin</p>
+  <p id="description" class="desc"></p>
+  <a class="btn" href="#bilet">Rezervasyon Yap</a>
+</section>
+<main>
+  <section class="band"><dl class="facts"><div><dt>Süre</dt><dd id="duration"></dd></div><div><dt>Yaş sınırı</dt><dd id="age"></dd></div>
+        <div class="price-box"><dt>Erken rezervasyon fiyatı</dt><dd><s id="oldPrice" hidden></s><span id="price"></span><span id="badge" class="badge" hidden></span></dd></div></dl>
+      <div class="venue"><strong id="venueName"></strong><span id="venueAddress"></span><a id="mapLink" hidden target="_blank" rel="noopener">Haritada aç</a></div></section>
+  <section id="oyuncular" class="section" hidden><h2>Oyuncular</h2><p class="lead" id="directorLine"></p><div class="cast" id="cast"></div></section>
+  <section id="bilet" class="card"><h2>Rezervasyon</h2>
+    <form id="form" novalidate><fieldset>
+        <legend><span class="n">1</span> Tarih seçin</legend>
+        <div id="sessions" class="sessions"></div>
+        <p id="noSessions" class="muted" hidden>Şu an açık tarih yok. Yeni tarihler için bizi takip edin.</p>
+      </fieldset>
+      <fieldset>
+        <legend><span class="n">2</span> Kaç kişi geleceksiniz?</legend>
+        <div class="stepper"><button type="button" id="minus" aria-label="Azalt">−</button><output id="seatsOut">1</output><button type="button" id="plus" aria-label="Artır">+</button></div>
+      </fieldset>
+      <fieldset>
+        <legend><span class="n">3</span> Bilgileriniz</legend>
+        <div class="row"><label>Ad<input name="name" autocomplete="given-name" required></label><label>Soyad<input name="surname" autocomplete="family-name" required></label></div>
+        <label>Telefon<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05xx xxx xx xx" required></label>
+        <label>E-posta <small>(isteğe bağlı)</small><input name="email" type="email" autocomplete="email"></label>
+        <label>Not <small>(isteğe bağlı)</small><input name="note" maxlength="300"></label>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      </fieldset>
+      <fieldset>
+        <legend><span class="n">4</span> Ödeme</legend>
+        <label class="choice"><input type="radio" name="paymentMethod" value="gise" checked><span><strong>Gişede öde</strong><small>Oyun günü gişede nakit veya kartla.</small></span></label>
+        <label class="choice"><input type="radio" name="paymentMethod" value="havale"><span><strong>Havale / EFT</strong><small>IBAN bilgisi bir sonraki adımda gösterilir.</small></span></label>
+      </fieldset>
+      <div class="total"><span>Toplam</span><strong id="total">—</strong></div>
+      <p id="error" class="error" role="alert" hidden></p>
+      <button class="btn block" id="submit" type="submit">Rezervasyonu Tamamla</button></form><div id="done" hidden>
+      <h2>Rezervasyonunuz alındı</h2>
+      <p>Rezervasyon kodunuz</p><p class="code" id="code"></p><p id="summary"></p>
+      <div id="bank" class="bank" hidden><p><strong>Ödeme için IBAN</strong></p><p class="iban" id="iban"></p><p id="bankInfo"></p><button type="button" class="btn ghost" id="copyIban">IBAN'ı kopyala</button></div>
+      <p class="muted">Bu kodu saklayın, gişede söylemeniz yeterli.</p>
+    </div></section>
+</main>
+<footer><a id="insta" hidden target="_blank" rel="noopener">Instagram</a><span>© Sevmekten Öldü Desinler!</span></footer>
+<script src="/app.js"></script></body></html>

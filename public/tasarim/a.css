@@ -1,0 +1,27 @@
+@import url(base.css);
+/* A · Bilet platformu: açık, net, işlem odaklı */
+body.v-a { --bg:#f3f4f6; --surface:#fff; --surface-2:#f3f4f6; --ink:#17181c; --muted:#585d66; --line:#e1e4e9; --line-strong:#c4c9d1;
+  --accent:#c2300f; --accent-ink:#fff; --accent-soft:#fcebe5; --head:'Bricolage Grotesque',system-ui,sans-serif; --body:Figtree,system-ui,sans-serif; --btn-r:10px; }
+.v-a .top { position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; height: 60px; padding: 0 clamp(1rem,4vw,2.5rem); background: #fff; border-bottom: 1px solid var(--line); }
+.v-a .brand { font: 800 1.0625rem var(--head); color: var(--ink); text-decoration: none; }
+.v-a nav { display: flex; gap: 1.5rem; font-size: .9rem; font-weight: 500; }
+.v-a nav a { color: var(--muted); text-decoration: none; }
+.v-a .event { max-width: 1040px; margin: 0 auto; padding: clamp(1.25rem,4vw,3rem) 1.25rem; display: grid; gap: 2rem; }
+@media (min-width: 860px) { .v-a .event { grid-template-columns: 340px 1fr; gap: 3rem; align-items: start; } }
+.v-a .poster { position: relative; aspect-ratio: 3/4; max-height: 440px; width: 100%; border-radius: 16px; background: #17181c; color: #f3f4f6; padding: 1.75rem; display: flex; flex-direction: column; justify-content: flex-end; gap: .5rem; overflow: hidden; }
+.v-a .poster::before { content: ''; position: absolute; right: -25%; top: -15%; width: 90%; aspect-ratio: 1; border-radius: 50%; background: var(--accent); }
+.v-a .poster span { position: absolute; top: 1.5rem; left: 1.75rem; font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; font-weight: 600; }
+.v-a .poster b { position: relative; font: 800 clamp(2rem, 6vw, 2.75rem)/1.02 var(--head); }
+.v-a .poster i { position: relative; font-style: normal; font-size: .8125rem; opacity: .75; }
+.v-a h1 { font-size: clamp(2.25rem, 6vw, 3.5rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem; }
+.v-a .desc { font-size: 1.0625rem; color: var(--muted); max-width: 52ch; }
+.v-a .facts { grid-template-columns: repeat(2, 1fr); }
+.v-a .event-info .btn { margin-top: 1.5rem; padding-inline: 2.5rem; }
+.v-a main { max-width: 1040px; }
+.v-a .section h2 { font-weight: 800; }
+.v-a #bilet { max-width: 640px; margin-inline: auto; box-shadow: 0 1px 2px rgb(0 0 0 / .04), 0 12px 32px rgb(40 30 20 / .07); }
+.v-a #bilet h2 { font-weight: 800; margin-bottom: 1.5rem; }
+.v-a .sticky-cta { position: fixed; inset: auto 0 0 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .75rem 1.25rem calc(.75rem + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgb(0 0 0 / .06); }
+.v-a .sticky-cta span { display: grid; line-height: 1.2; } .v-a .sticky-cta b { font: 800 1.375rem var(--head); } .v-a .sticky-cta small { color: var(--muted); font-size: .75rem; }
+@media (min-width: 860px) { .v-a .sticky-cta { display: none; } }
+@media (max-width: 859px) { body.v-a { padding-bottom: 5rem; } }

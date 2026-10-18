@@ -1,0 +1,31 @@
+@import url(base.css);
+/* C · Gece sahnesi: koyu, sinematik; tarihler ince çizgili program listesi */
+body.v-c { --bg:#0e0a0c; --surface:#171014; --surface-2:#1d1318; --ink:#f3ebe2; --muted:#b2a39b; --line:#32222a; --line-strong:#4a323d;
+  --accent:#e0b469; --accent-ink:#1a1014; --accent-soft:rgb(224 180 105 / .12); --head:'Cormorant Garamond',Georgia,serif; --body:Manrope,system-ui,sans-serif; --btn-r:999px; --card-r:6px; --field:#120c0f; }
+.v-c .top { position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; height: 60px; padding: 0 clamp(1rem,4vw,2.5rem); background: rgb(14 10 12 / .9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.v-c .brand { font: 700 1.25rem var(--head); letter-spacing: .15em; color: var(--ink); text-decoration: none; }
+.v-c nav { display: flex; gap: 1.5rem; align-items: center; font-size: .875rem; }
+.v-c nav a { color: var(--muted); text-decoration: none; }
+.v-c .nav-cta { color: var(--accent-ink); background: var(--accent); padding: .4rem 1rem; border-radius: 999px; font-weight: 600; }
+.v-c .hero { min-height: 78vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4rem 1.25rem; background: linear-gradient(180deg, rgb(14 10 12 / .1), var(--bg)), linear-gradient(135deg, #2a1119 0%, #0e0a0c 55%); }
+.v-c h1 { font-size: clamp(3rem, 12vw, 7.5rem); font-weight: 600; letter-spacing: -.01em; line-height: .95; max-width: 12ch; margin-bottom: 1.5rem; text-wrap: balance; }
+.v-c .desc { color: var(--muted); max-width: 46ch; font-size: 1.0625rem; margin-bottom: 2rem; }
+.v-c .band { padding: 2rem 0 .5rem; }
+.v-c h2 { font-weight: 600; font-size: clamp(1.75rem, 5vw, 2.5rem); }
+.v-c .facts div { border-radius: 4px; }
+.v-c #price, .v-c .total strong { font-family: var(--head); font-weight: 700; }
+/* program listesi */
+.v-c .sessions { gap: 0; border-top: 1px solid var(--line-strong); }
+.v-c .session { border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0; background: none; padding: 1.125rem 3rem 1.125rem .25rem; gap: 1.25rem; }
+.v-c .session:hover:not(.full) { background: var(--accent-soft); border-color: var(--line-strong); }
+.v-c .session:has(input:checked) { box-shadow: none; background: var(--accent-soft); border-color: var(--accent); }
+.v-c .sdate { width: 3.5rem; background: none; color: var(--accent); padding: 0; }
+.v-c .sdate b { font: 600 2.5rem/1 var(--head); }
+.v-c .sdate small { color: var(--muted); }
+.v-c .sinfo strong { font: 600 1.25rem var(--head); }
+.v-c legend .n { background: var(--accent); color: var(--accent-ink); }
+.v-c .btn { font-weight: 700; }
+.v-c .person .ph { font-family: var(--head); font-size: 1.5rem; }
+.v-c .by { font: italic 500 1.375rem var(--head); color: var(--accent); margin-bottom: 1.25rem; }
+input::placeholder { color: #9a8d88; opacity: 1; }
+.v-b #director, .v-c #director { display: none !important; }
