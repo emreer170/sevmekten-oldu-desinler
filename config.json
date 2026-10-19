@@ -150,5 +150,10 @@
       "time": "20:30",
       "capacity": 43
     }
-  ]
+  ],
+  "limits": {
+    "maxSeatsPerPhone": 8,
+    "maxReservationsPerIpPerHour": 4,
+    "minFormSeconds": 4
+  }
 }

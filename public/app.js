@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 const fmtDate = (d) => new Date(d + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
 const money = (n, cur) => `${n.toLocaleString('tr-TR')} ${cur}`;
 let show, seats = 1;
+const openedAt = Date.now();
 
 function selectedSession() {
   const id = document.querySelector('input[name=session]:checked')?.value;
@@ -125,6 +126,7 @@ $('form').addEventListener('submit', async (e) => {
   const body = Object.fromEntries(f);
   body.sessionId = f.get('session');
   body.seats = seats;
+  body.elapsed = Date.now() - openedAt; // form ne kadar süredir açık (bot önlemi)
   if (!body.sessionId) { err.textContent = 'Lütfen bir tarih seçin.'; err.hidden = false; return; }
   $('submit').disabled = true;
   try {

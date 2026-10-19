@@ -77,6 +77,7 @@ const isPast = (s) => new Date(`${s.date}T${s.time}:00`) < new Date();
 
 const app = express();
 app.disable('x-powered-by');
+if (process.env.TRUST_PROXY) app.set('trust proxy', Number(process.env.TRUST_PROXY) || process.env.TRUST_PROXY); // Render, Railway gibi bir proxy arkasındaysa 1 yazın
 app.use(express.json({ limit: '10kb' }));
 
 // ---- yönetici oturumu (imzalı çerez) ----
@@ -125,11 +126,27 @@ function publicShow() {
 }
 app.get('/api/show', (_req, res) => res.json(publicShow()));
 
+
+// ---- kötüye kullanım önlemleri ----
+const limits = { maxSeatsPerPhone: 8, maxReservationsPerIpPerHour: 4, minFormSeconds: 4, ...(config.limits || {}) };
+const normPhone = (p) => String(p).replace(/\D/g, '').slice(-10); // 0555…, +90 555…, 555… aynı numara sayılır
+const seatsOfPhone = (phone) => db.prepare('SELECT phone, seats FROM reservations').all()
+  .filter((r) => normPhone(r.phone) === phone).reduce((a, r) => a + r.seats, 0);
+const ipHits = new Map();
+function ipBlocked(ip) {
+  const now = Date.now();
+  const list = (ipHits.get(ip) || []).filter((t) => now - t < 3600 * 1000);
+  ipHits.set(ip, list);
+  return list.length >= limits.maxReservationsPerIpPerHour;
+}
+
 const clean = (v, max) => String(v ?? '').trim().slice(0, max);
 
 app.post('/api/reservations', (req, res) => {
   const b = req.body || {};
   if (b.website) return res.json({ ok: true }); // bal kabı alanı: botlar doldurur
+  if (!(Number(b.elapsed) >= limits.minFormSeconds * 1000)) return res.status(429).json({ error: 'Form çok hızlı gönderildi, lütfen tekrar deneyin.' });
+  if (ipBlocked(req.ip)) return res.status(429).json({ error: 'Bu cihazdan kısa sürede çok fazla rezervasyon yapıldı. Lütfen daha sonra tekrar deneyin ya da bizimle iletişime geçin.' });
   const session = sessionById.get(b.sessionId);
   const name = clean(b.name, 60), surname = clean(b.surname, 60);
   const phone = clean(b.phone, 25), email = clean(b.email, 120), note = clean(b.note, 300);
@@ -144,6 +161,11 @@ app.post('/api/reservations', (req, res) => {
     return res.status(400).json({ error: `Kişi sayısı 1 ile ${config.maxSeatsPerReservation} arasında olmalı.` });
   const allowed = config.payment.onlineEnabled ? ['gise', 'havale'] : ['gise'];
   if (!allowed.includes(method)) return res.status(400).json({ error: 'Online ödeme henüz açık değil, gişede nakit ödeme seçin.' });
+
+  const phoneKey = normPhone(phone);
+  const already = seatsOfPhone(phoneKey);
+  if (already + seats > limits.maxSeatsPerPhone)
+    return res.status(409).json({ error: `Bu telefon numarasıyla en fazla ${limits.maxSeatsPerPhone} kişilik rezervasyon yapılabilir.` });
 
   // tek süreç ve eşzamanlı olmayan sürücü: kontrol + ekleme bölünemez
   db.exec('BEGIN IMMEDIATE');
@@ -160,6 +182,7 @@ app.post('/api/reservations', (req, res) => {
       catch (e) { if (i === 4 || !/UNIQUE/.test(e.message)) throw e; }
     }
     db.exec('COMMIT');
+    ipHits.get(req.ip)?.push(Date.now()) ?? ipHits.set(req.ip, [Date.now()]);
     sendConfirmation({ to: email, name, code, session, seats, method });
     res.json({
       ok: true, code, seats, method,
