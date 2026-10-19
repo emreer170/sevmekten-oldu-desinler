@@ -100,8 +100,27 @@ function renderPage() {
     media.append(i); media.hidden = false;
   }
   setupWhatsapp();
+  setupMarquee(cast);
   renderSessions();
   updateTotal();
+}
+
+function setupMarquee(cast) {
+  if (!cast.length) return;
+  const track = $('track');
+  const group = () => {
+    const g = document.createElement('div');
+    g.className = 'group';
+    const label = document.createElement('span');
+    label.className = 'lbl';
+    label.textContent = 'Sahnede';
+    g.append(label);
+    cast.forEach((p) => g.append(Object.assign(document.createElement('span'), { textContent: p.name })));
+    return g;
+  };
+  track.replaceChildren(group(), group()); // iki kopya: döngü kesintisiz görünsün
+  track.lastChild.setAttribute('aria-hidden', 'true');
+  $('marquee').hidden = false;
 }
 
 function setupWhatsapp() {
