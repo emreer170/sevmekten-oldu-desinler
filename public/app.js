@@ -74,7 +74,7 @@ function renderPage() {
   if (show.instagram) { $('insta').href = show.instagram; $('insta').hidden = false; }
   if (cast.length) {
     $('oyuncular').hidden = false;
-    if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}. Oyuncular, canlandırdıkları karakterlere göre sıralanmıştır.`;
+    if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}`;
     cast.forEach((p) => {
       const el = document.createElement('div');
       el.className = 'person';
