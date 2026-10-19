@@ -39,3 +39,9 @@ Değişiklikten sonra sunucuyu yeniden başlatın. Oyuncu fotoğrafları `public
 - Siteyi güncellemek için (örn. `config.json` değişince) aynı dosyayı yeniden çalıştır.
 - Bilgisayarda deneme için eski `baslat` dosyaları çalışmaya devam eder (ayrı bir deneme veritabanı kullanır).
 - Cloudflare sürümü `worker/index.js` ve `schema.sql` dosyalarında, yerel sürüm `server.js` içindedir. İkisi de aynı `config.json` ve `public/` klasörünü kullanır.
+
+## Otomatik yayın (GitHub → Cloudflare)
+Cloudflare bu depoya bağlanınca, dala her push yapıldığında site kendiliğinden güncellenir (`yayinla.bat` gerekmez).
+Kurulum (bir kez): Cloudflare paneli → Workers & Pages → `sevmekten-oldu-desinler` → Settings → Builds → Connect → GitHub.
+Production branch: `claude/rezervasyon-sitesi`, Build command: boş, Deploy command: `npx wrangler deploy`.
+Panel şifresi ve mail ayarları Cloudflare'de saklıdır, depoda yoktur. Veritabanı tablosu değişirse `schema.sql` ayrıca uygulanmalıdır.

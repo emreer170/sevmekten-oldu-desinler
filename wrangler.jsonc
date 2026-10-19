@@ -9,7 +9,7 @@
     "html_handling": "auto-trailing-slash"
   },
   "d1_databases": [
-    { "binding": "DB", "database_name": "sevmekten-db", "database_id": "BURAYA_DATABASE_ID" }
+    { "binding": "DB", "database_name": "sevmekten-db", "database_id": "3ff2f5c0-be4d-4e06-895a-5c3f6d053ac8" }
   ],
   // Her gün 08:00 UTC = 11:00 İstanbul: ertesi günün oyunu için hatırlatma maillerini gönderir
   "triggers": { "crons": ["0 8 * * *"] }
