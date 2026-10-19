@@ -19,29 +19,41 @@ const DB_PATH = process.env.DB_PATH || path.join(root, 'data', 'rezervasyon.db')
 if (!ADMIN_PASSWORD) console.warn('UYARI: ADMIN_PASSWORD tanımlı değil, yönetici paneli kapalı.');
 
 mkdirSync(path.dirname(DB_PATH), { recursive: true });
-// E-posta (isteğe bağlı): SMTP_HOST, SMTP_USER, SMTP_PASS tanımlıysa onay maili gönderilir
+// E-posta (isteğe bağlı): SMTP_HOST, SMTP_USER, SMTP_PASS tanımlıysa onay ve hatırlatma maili gönderilir.
+// MAIL_MODE=console: gerçek mail göndermeden, mailleri konsola yazar (deneme için).
+const consoleMail = process.env.MAIL_MODE === 'console';
 const mailer = process.env.SMTP_HOST
   ? nodemailer.createTransport({
       host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 465),
       secure: (process.env.SMTP_PORT || '465') === '465',
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
     })
-  : null;
-async function sendConfirmation({ to, name, code, session, seats, method }) {
-  if (!mailer || !to) return;
-  const when = new Date(session.date + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
+  : consoleMail ? nodemailer.createTransport({ jsonTransport: true }) : null;
+
+const waLine = () => (config.contact?.whatsapp ? `\nSorularınız ya da değişiklik için WhatsApp: ${config.contact.whatsapp}` : '');
+const dayLabel = (date) => new Date(date + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
+function details({ code, session, seats, method }) {
   const total = seats * config.price.amount;
   const pay = method === 'havale'
     ? `Ödeme: Havale/EFT ile ${total} ${config.price.currency}\nIBAN: ${config.payment.iban}\n${config.payment.accountName} - ${config.payment.bank}\n${config.payment.note}`
-    : `Ödeme: Gişede nakit (${total} ${config.price.currency})`;
-  try {
-    await mailer.sendMail({
-      from: process.env.MAIL_FROM || process.env.SMTP_USER, to,
-      subject: `Rezervasyonunuz alındı – ${config.play.title} (${code})`,
-      text: `Merhaba ${name},\n\n${config.play.title} için rezervasyonunuz alındı.\n\nKod: ${code}\nTarih: ${when}, saat ${session.time}\nKişi: ${seats}\nYer: ${config.venue.name}, ${config.venue.address}\n${pay}\n\nGörüşmek üzere!`,
-    });
-  } catch (e) { console.error('E-posta gönderilemedi:', e.message); }
+    : `Ödeme: Gişede nakit, ${total} ${config.price.currency}`;
+  const map = config.venue.mapUrl ? `\nHarita: ${config.venue.mapUrl}` : '';
+  return `Rezervasyon kodu: ${code}\nTarih: ${dayLabel(session.date)}, saat ${session.time}\nKişi sayısı: ${seats}\nYer: ${config.venue.name}, ${config.venue.address}${map}\n${pay}`;
 }
+async function sendMail(to, subject, text) {
+  if (!mailer || !to) return false;
+  try {
+    const info = await mailer.sendMail({ from: process.env.MAIL_FROM || process.env.SMTP_USER || 'rezervasyon@localhost', to, subject, text });
+    if (consoleMail) console.log(`[MAIL → ${to}] ${subject}\n${text}\n`);
+    return true;
+  } catch (e) { console.error('E-posta gönderilemedi:', e.message); return false; }
+}
+const sendConfirmation = ({ to, name, code, session, seats, method }) => sendMail(to,
+  `Rezervasyonunuz onaylandı – ${config.play.title}`,
+  `Merhaba ${name},\n\n${config.play.title} için rezervasyonunuz onaylandı.\n\n${details({ code, session, seats, method })}\n\nGişede rezervasyon kodunuzu söylemeniz yeterli. Oyundan önceki gün size bir hatırlatma maili göndereceğiz.${waLine()}\n\nGörüşmek üzere!`);
+const sendReminder = (r, session) => sendMail(r.email,
+  `Yarın görüşüyoruz – ${config.play.title}`,
+  `Merhaba ${r.name},\n\n${config.play.title} oyunu yarın akşam saat ${session.time}'de başlıyor. Rezervasyonunuzu hatırlatmak istedik.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nOyun başlamadan en az 15 dakika önce gelmenizi öneririz. Planınız değiştiyse lütfen bizi bilgilendirin ki yerinizi başkasına açabilelim.${waLine()}\n\nGörüşmek üzere!`);
 
 const db = new DatabaseSync(DB_PATH);
 db.exec(`
@@ -61,6 +73,7 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_res_session ON reservations(session_id);
 `);
+try { db.exec('ALTER TABLE reservations ADD COLUMN reminder_sent INTEGER NOT NULL DEFAULT 0'); } catch {} // eski veritabanları için
 
 const sessions = config.sessions.map((s) => ({ ...s, id: `${s.date}T${s.time}` }));
 const sessionById = new Map(sessions.map((s) => [s.id, s]));
@@ -74,6 +87,31 @@ const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const newCode = () => Array.from(randomBytes(6), (b) => CODE_CHARS[b % CODE_CHARS.length]).join('');
 
 const isPast = (s) => new Date(`${s.date}T${s.time}:00`) < new Date();
+
+
+// ---- önceki gün hatırlatma maili ----
+// Her saat başı bakar; yarın oynanacak oyunların e-postalı rezervasyonlarına, öğleden sonra (>=10:00 İstanbul) bir kez gönderir.
+const istanbul = (d) => Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' })
+  .formatToParts(d).filter((p) => p.type !== 'literal').map((p) => [p.type, p.value]));
+async function runReminders(now = new Date()) {
+  if (!mailer) return;
+  const t = istanbul(now);
+  if (Number(t.hour) < 10) return;
+  const tomorrow = new Date(Date.UTC(+t.year, +t.month - 1, +t.day + 1)).toISOString().slice(0, 10);
+  const todays = sessions.filter((s) => s.date === tomorrow).map((s) => s.id);
+  if (!todays.length) return;
+  const rows = db.prepare(`SELECT * FROM reservations WHERE reminder_sent = 0 AND email IS NOT NULL AND email != ''
+    AND created_at < datetime('now', '-12 hours') AND session_id IN (${todays.map(() => '?').join(',')})`).all(...todays);
+  for (const r of rows) {
+    if (await sendReminder(r, sessionById.get(r.session_id))) db.prepare('UPDATE reservations SET reminder_sent = 1 WHERE id = ?').run(r.id);
+    await new Promise((res) => setTimeout(res, 1500)); // Gmail gibi servisleri yormamak için yavaş gönder
+  }
+}
+if (mailer) {
+  const tick = () => runReminders(process.env.FAKE_NOW ? new Date(process.env.FAKE_NOW) : new Date()).catch((e) => console.error('Hatırlatma hatası:', e.message));
+  setTimeout(tick, 5000);
+  setInterval(tick, 3600 * 1000);
+}
 
 const app = express();
 app.disable('x-powered-by');
@@ -111,7 +149,7 @@ function publicShow() {
   return {
     play: config.play, venue: config.venue, price: config.price, instagram: config.instagram,
     cast: config.cast, maxSeats: config.maxSeatsPerReservation,
-    payment: { onlineEnabled: !!config.payment.onlineEnabled, iban: config.payment.iban, accountName: config.payment.accountName, bank: config.payment.bank, note: config.payment.note },
+    contact: config.contact || {}, payment: { onlineEnabled: !!config.payment.onlineEnabled, iban: config.payment.iban, accountName: config.payment.accountName, bank: config.payment.bank, note: config.payment.note },
     // Gerçek kontenjan ve kalan sayı gizli tutulur; ziyaretçiye yalnızca seviye gösterilir
     sessions: sessions.filter((s) => !isPast(s)).map((s) => {
       const remaining = Math.max(0, s.capacity - seatsTaken.get(s.id).n);

@@ -99,15 +99,24 @@ function renderPage() {
     const i = Object.assign(document.createElement('img'), { src: play.poster, alt: `${play.title} afişi` });
     media.append(i); media.hidden = false;
   }
-  if (show.payment.onlineEnabled) {
-    const online = document.querySelector('.choice.disabled');
-    online.classList.remove('disabled'); online.removeAttribute('aria-disabled');
-    online.querySelector('input').disabled = false;
-    online.querySelector('.soon')?.remove();
-    online.querySelector('small').textContent = 'IBAN bilgisi bir sonraki adımda gösterilir.';
-  }
+  setupWhatsapp();
   renderSessions();
   updateTotal();
+}
+
+function setupWhatsapp() {
+  const num = (show.contact?.whatsapp || '').trim();
+  const digits = num.replace(/\D/g, '').replace(/^0/, '');
+  [['wa', 'Sorularınız için bize WhatsApp\'tan yazabilirsiniz: '], ['waDone', 'Değişiklik ya da sorularınız için WhatsApp: ']].forEach(([id, label]) => {
+    const el = $(id);
+    el.replaceChildren(label);
+    if (num) {
+      el.append(Object.assign(document.createElement('a'), { href: `https://wa.me/90${digits}`, target: '_blank', rel: 'noopener', textContent: num }));
+    } else {
+      el.append('numaramız yakında burada olacak.');
+    }
+    el.hidden = false;
+  });
 }
 
 async function load() {

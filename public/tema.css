@@ -57,3 +57,6 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 .b3 .spec .price-box { background: var(--accent-soft); padding: .875rem 1rem; border-bottom: 2px solid #151515; }
 .b3 .spec .price-box dd { display: flex; align-items: center; gap: .625rem; flex-wrap: wrap; }
 .b3 .hero-main .desc p:last-child { font-size: .875rem; color: var(--muted); }
+.b3 .wa { margin: .75rem 0 0; font-size: .9375rem; color: var(--muted); }
+.b3 .wa a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.b3 #done .wa { margin-top: 1rem; }

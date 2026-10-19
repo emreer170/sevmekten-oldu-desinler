@@ -48,7 +48,7 @@
       <fieldset>
         <legend><span class="n">4</span> Ödeme</legend>
         <label class="choice"><input type="radio" name="paymentMethod" value="gise" checked><span><strong>Gişede öde</strong><small>Oyun günü gişede yalnızca nakit ödeme alınır.</small></span></label>
-        <label class="choice disabled" aria-disabled="true"><input type="radio" name="paymentMethod" value="havale" disabled><span><strong>Online ödeme / Havale <em class="soon">Yakında</em></strong><small>Havale ile ödeme çok yakında açılacak.</small></span></label>
+      <p class="wa" id="wa" hidden></p>
       </fieldset>
       <div class="total"><span>Toplam</span><strong id="total">—</strong></div>
       <p id="error" class="error" role="alert" hidden></p>
@@ -58,6 +58,7 @@
       <p>Rezervasyon kodunuz</p><p class="code" id="code"></p><p id="summary"></p>
       <div id="bank" class="bank" hidden><p><strong>Ödeme için IBAN</strong></p><p class="iban" id="iban"></p><p id="bankInfo"></p><button type="button" class="btn ghost" id="copyIban">IBAN'ı kopyala</button></div>
       <p class="muted">Bu kodu saklayın, gişede söylemeniz yeterli.</p>
+      <p class="wa" id="waDone" hidden></p>
     </div>
   </section>
 <section id="oyuncular" class="section" hidden><h2>Oyuncular</h2><p class="lead" id="directorLine"></p><div class="cast" id="cast"></div></section>

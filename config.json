@@ -155,5 +155,8 @@
     "maxSeatsPerPhone": 8,
     "maxReservationsPerIpPerHour": 4,
     "minFormSeconds": 4
+  },
+  "contact": {
+    "whatsapp": ""
   }
 }
