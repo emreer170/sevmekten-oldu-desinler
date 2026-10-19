@@ -86,7 +86,7 @@ const insertRes = db.prepare(`INSERT INTO reservations
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const newCode = () => Array.from(randomBytes(6), (b) => CODE_CHARS[b % CODE_CHARS.length]).join('');
 
-const isPast = (s) => new Date(`${s.date}T${s.time}:00`) < new Date();
+const isPast = (s) => new Date(`${s.date}T${s.time}:00+03:00`) < new Date(); // İstanbul saati
 
 
 // ---- önceki gün hatırlatma maili ----
@@ -302,7 +302,7 @@ app.get('/api/admin/export.csv', requireAdmin, (_req, res) => {
 // ---- sayfalar ----
 app.get(ADMIN_PATH, (_req, res) => {
   res.setHeader('X-Robots-Tag', 'noindex');
-  res.sendFile(path.join(root, 'views', 'admin.html'));
+  res.sendFile(path.join(root, 'public', 'yonetim.html'));
 });
 app.get('/robots.txt', (_req, res) => res.type('text/plain').send(`User-agent: *\nDisallow: ${ADMIN_PATH}\n`));
 app.use(express.static(path.join(root, 'public')));

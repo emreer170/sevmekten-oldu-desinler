@@ -1,0 +1,16 @@
+{
+  "name": "sevmekten-oldu-desinler",
+  "main": "worker/index.js",
+  "compatibility_date": "2025-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./public",
+    "run_worker_first": ["/api/*"],
+    "html_handling": "auto-trailing-slash"
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "sevmekten-db", "database_id": "BURAYA_DATABASE_ID" }
+  ],
+  // Her gün 08:00 UTC = 11:00 İstanbul: ertesi günün oyunu için hatırlatma maillerini gönderir
+  "triggers": { "crons": ["0 8 * * *"] }
+}

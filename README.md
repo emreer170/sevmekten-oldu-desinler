@@ -30,3 +30,12 @@ Değişiklikten sonra sunucuyu yeniden başlatın. Oyuncu fotoğrafları `public
 - Hatırlatma için sunucunun o gün açık olması gerekir. Mail ayarı boşsa hiçbir mail gitmez, site yine çalışır.
 - Deneme için: `MAIL_MODE=console` yazarsan mailler gerçekten gitmez, sunucu penceresine yazılır.
 - WhatsApp numarası: `config.json` içindeki `contact.whatsapp` alanına yaz (örn. `"0555 123 45 67"`).
+
+## İnternette yayınlama (Cloudflare, ücretsiz)
+1. Node.js kurulu olsun (bkz. yukarısı).
+2. Windows: `yayinla.bat`, Mac: `yayinla.command` dosyasına çift tıkla.
+3. Ekrandaki sorulara cevap ver: tarayıcıda Cloudflare'e giriş (hesap ücretsiz, kart istemez), panel şifresi, istersen Gmail bilgileri.
+4. Bittiğinde ekranda `https://sevmekten-oldu-desinler.….workers.dev` adresi görünür. Panel: adresin sonuna `/yonetim`.
+- Siteyi güncellemek için (örn. `config.json` değişince) aynı dosyayı yeniden çalıştır.
+- Bilgisayarda deneme için eski `baslat` dosyaları çalışmaya devam eder (ayrı bir deneme veritabanı kullanır).
+- Cloudflare sürümü `worker/index.js` ve `schema.sql` dosyalarında, yerel sürüm `server.js` içindedir. İkisi de aynı `config.json` ve `public/` klasörünü kullanır.
