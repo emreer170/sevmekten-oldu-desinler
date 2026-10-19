@@ -71,3 +71,30 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 .marquee .group .lbl { color: #ff8a8f; font-weight: 600; }
 @keyframes kayan { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .marquee { overflow-x: auto; } .marquee .track { animation: none; } }
+
+/* ---- yeni bölümler: eylemler, sorgulama, bekleme listesi, ulaşım, SSS, paylaş ---- */
+.b3 .actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.b3 .actions.center { justify-content: center; margin: 1.25rem 0 .5rem; }
+.b3 .btn.ghost { background: none; border: 1.5px solid #151515; color: #151515; padding: calc(.875rem - 1.5px) 1.5rem; font-size: .875rem; text-transform: none; letter-spacing: 0; }
+.b3 .btn.ghost:hover { background: var(--surface-2); filter: none; }
+.b3 .btn.danger { background: #151515; border-color: #151515; color: #fff; }
+.b3 #shareNote { margin: .75rem 0 0; }
+.b3 select { display: block; width: 100%; margin-top: .375rem; padding: .8rem .9rem; font: 400 1rem var(--body); color: var(--ink); background: #fff; border: 1px solid #151515; border-radius: 0; }
+.b3 select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.b3 .wait { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.b3 .wait h3, .b3 .sorgu h3 { font: 600 1.25rem var(--head); margin: 0 0 .25rem; }
+.b3 .sorgu { max-width: 680px; margin: 0 auto; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 1rem 0; }
+.b3 .sorgu summary, .b3 .faq summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+.b3 .sorgu summary::-webkit-details-marker, .b3 .faq summary::-webkit-details-marker { display: none; }
+.b3 .sorgu summary::after, .b3 .faq summary::after { content: '+'; font-size: 1.5rem; font-weight: 400; color: var(--accent); line-height: 1; }
+.b3 .sorgu[open] summary::after, .b3 .faq details[open] summary::after { content: '−'; }
+.b3 .sorgu form { margin-top: 1rem; }
+.b3 #lookupResult { margin-top: 1.25rem; padding: 1.25rem; background: var(--surface-2); }
+.b3 #lookupResult .ask { margin-top: 1rem; display: grid; gap: .75rem; justify-items: start; }
+.b3 #lookupResult p.ok { color: #1b7a43; font-weight: 600; }
+.b3 .mapbox { margin-top: 1.25rem; aspect-ratio: 16 / 9; max-height: 380px; background: var(--surface-2); border: 1px solid var(--line); }
+.b3 .mapbox iframe { width: 100%; height: 100%; border: 0; display: block; }
+.b3 .faq { border-top: 1px solid #151515; }
+.b3 .faq details { border-bottom: 1px solid var(--line); padding: 1rem 0; }
+.b3 .faq details p { margin: .75rem 0 0; color: var(--muted); max-width: 62ch; }
+.b3 .share { border-top: 1px solid var(--line); padding-top: 2.5rem; }

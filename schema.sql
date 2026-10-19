@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS reservations (
   paid INTEGER NOT NULL DEFAULT 0,
   note TEXT,
   reminder_sent INTEGER NOT NULL DEFAULT 0,
+  arrived INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_res_session ON reservations(session_id);
@@ -22,3 +23,12 @@ CREATE TABLE IF NOT EXISTS hits (
   ts INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_hits ON hits(kind, ip, ts);
+CREATE TABLE IF NOT EXISTS waitlist (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT NOT NULL,
+  email TEXT NOT NULL,
+  name TEXT,
+  notified INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_wait_session ON waitlist(session_id);

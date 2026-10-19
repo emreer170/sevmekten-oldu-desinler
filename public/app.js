@@ -75,6 +75,7 @@ function renderPage() {
   if (cast.length) {
     $('oyuncular').hidden = false;
     if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}`;
+    $('cast').replaceChildren();
     cast.forEach((p) => {
       const el = document.createElement('div');
       el.className = 'person';
@@ -101,6 +102,7 @@ function renderPage() {
   }
   setupWhatsapp();
   setupMarquee(cast);
+  setupExtras();
   renderSessions();
   updateTotal();
 }
@@ -170,6 +172,7 @@ $('form').addEventListener('submit', async (e) => {
       $('iban').textContent = show.payment.iban;
       $('bankInfo').textContent = `${show.payment.accountName} · ${show.payment.bank}. ${show.payment.note}`;
     }
+    setCalendar($('gcal'), $('ics'), data.session, data.code);
     $('done').scrollIntoView({ behavior: 'smooth' });
   } catch {
     err.textContent = 'Bağlantı hatası, lütfen tekrar deneyin.'; err.hidden = false;
@@ -180,4 +183,136 @@ $('copyIban').onclick = async () => {
   try { await navigator.clipboard.writeText(show.payment.iban.replace(/\s/g, '')); $('copyIban').textContent = 'Kopyalandı ✓'; } catch {}
 };
 
-load();
+// ---- takvim (Google Takvim bağlantısı ve .ics dosyası) ----
+function calTimes(session) {
+  const minutes = parseInt(show.play.duration, 10) || 95;
+  const start = new Date(`${session.date}T${session.time}:00+03:00`); // İstanbul saati
+  const end = new Date(start.getTime() + minutes * 60000);
+  const f = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  return { start: f(start), end: f(end) };
+}
+function setCalendar(gcalEl, icsEl, session, code) {
+  const t = calTimes(session);
+  const place = `${show.venue.name}, ${show.venue.address}`;
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: show.play.title, dates: `${t.start}/${t.end}`, location: place, details: `Rezervasyon kodu: ${code}` });
+  gcalEl.href = `https://calendar.google.com/calendar/render?${q}`;
+  const esc = (v) => String(v).replace(/[\;,]/g, (m) => '\\' + m).replace(/\n/g, '\\n');
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sevmekten Oldu Desinler//TR', 'BEGIN:VEVENT',
+    `UID:${code}@sevmekten-oldu-desinler`, `DTSTAMP:${calTimes({ date: session.date, time: session.time }).start}`,
+    `DTSTART:${t.start}`, `DTEND:${t.end}`, `SUMMARY:${esc(show.play.title)}`, `LOCATION:${esc(place)}`,
+    `DESCRIPTION:${esc('Rezervasyon kodu: ' + code)}`, 'BEGIN:VALARM', 'TRIGGER:-PT3H', 'ACTION:DISPLAY', 'DESCRIPTION:Oyun yaklasiyor', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  if (icsEl._url) URL.revokeObjectURL(icsEl._url);
+  icsEl._url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+  icsEl.href = icsEl._url;
+  icsEl.download = 'sevmekten-oldu-desinler.ics';
+}
+
+// ---- paylaş ----
+async function shareSite() {
+  const url = `${location.origin}/`;
+  const data = { title: show.play.title, text: `${show.play.title} · ${show.play.tagline} Biletini ayırt:`, url };
+  const note = $('shareNote');
+  const say = (m) => { note.textContent = m; note.hidden = false; setTimeout(() => { note.hidden = true; }, 4000); };
+  if (navigator.share) {
+    try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(`${data.text} ${url}`); say('Bağlantı kopyalandı, istediğin yere yapıştırabilirsin.'); }
+  catch { say(url); }
+}
+
+// ---- sayfa eklentileri: ulaşım, SSS, bekleme listesi ----
+function setupExtras() {
+  const v = show.venue, place = `${v.name}, ${v.address}`;
+  $('transportAddr').textContent = place;
+  if (v.transport) { $('transportNote').textContent = v.transport; $('transportNote').hidden = false; }
+  $('dirBtn').href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place)}`;
+  const frame = $('mapFrame');
+  const src = `https://www.google.com/maps?q=${encodeURIComponent(place)}&output=embed&hl=tr`;
+  if (frame.getAttribute('src') !== src) frame.src = src;
+  const faq = $('faq');
+  faq.replaceChildren(...(show.faq || []).map((f) => {
+    const d = document.createElement('details');
+    const q = document.createElement('summary'); q.textContent = f.q;
+    const a = document.createElement('p'); a.textContent = f.a;
+    d.append(q, a);
+    return d;
+  }));
+  $('sss').hidden = !(show.faq || []).length;
+  // bekleme listesi yalnızca dolu bir tarih varsa görünür
+  const sold = show.sessions.filter((x) => x.level === 'sold');
+  $('waitBox').hidden = sold.length === 0;
+  $('waitSession').replaceChildren(...sold.map((x) => Object.assign(document.createElement('option'), { value: x.id, textContent: `${fmtDate(x.date)} · ${x.time}` })));
+}
+$('shareBtn').onclick = shareSite;
+$('shareDone').onclick = shareSite;
+$('copyLink').onclick = async () => {
+  try { await navigator.clipboard.writeText(`${location.origin}/`); $('copyLink').textContent = 'Kopyalandı ✓'; } catch { $('copyLink').textContent = location.origin; }
+};
+
+$('waitForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('waitMsg');
+  const f = Object.fromEntries(new FormData(e.target));
+  msg.hidden = false; msg.textContent = 'Gönderiliyor…';
+  try {
+    const res = await fetch('/api/waitlist', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f) });
+    const d = await res.json();
+    msg.textContent = res.ok ? 'Bekleme listesine eklendiniz. Yer açılırsa e-posta ile haber vereceğiz.' : (d.error || 'Bir hata oluştu.');
+    if (res.status === 409) load();
+  } catch { msg.textContent = 'Bağlantı hatası, lütfen tekrar deneyin.'; }
+});
+
+// ---- rezervasyon sorgulama ve iptal ----
+function openSorgu() { if (location.hash === '#sorgu') { $('sorgu').open = true; $('sorgu').scrollIntoView(); } }
+window.addEventListener('hashchange', openSorgu);
+$('lookupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const err = $('lookupErr'), box = $('lookupResult');
+  err.hidden = true; box.hidden = true;
+  const f = Object.fromEntries(new FormData(e.target));
+  try {
+    const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f) });
+    const d = await res.json();
+    if (!res.ok) { err.textContent = d.error || 'Bir hata oluştu.'; err.hidden = false; return; }
+    showReservation(d, f);
+  } catch { err.textContent = 'Bağlantı hatası, lütfen tekrar deneyin.'; err.hidden = false; }
+});
+function showReservation(d, creds) {
+  const box = $('lookupResult');
+  const make = (tag, text, cls) => { const x = document.createElement(tag); if (text != null) x.textContent = text; if (cls) x.className = cls; return x; };
+  box.replaceChildren();
+  box.append(make('h3', `${d.name} ${d.surname}`));
+  box.append(make('p', d.session ? `${fmtDate(d.session.date)}, saat ${d.session.time} · ${d.seats} kişi · ${money(d.total, show.price.currency)}` : ''));
+  box.append(make('p', d.paid ? 'Ödemeniz alındı.' : 'Ödeme oyun günü gişede nakit alınacak.', 'muted'));
+  if (d.session) {
+    const row = make('div', null, 'actions');
+    const g = make('a', "Google Takvim'e ekle", 'btn ghost'); g.target = '_blank'; g.rel = 'noopener';
+    const i = make('a', 'Takvime ekle (.ics)', 'btn ghost');
+    setCalendar(g, i, d.session, d.code);
+    row.append(g, i);
+    box.append(row);
+  }
+  if (d.canCancel) {
+    const cancel = make('button', 'Rezervasyonu iptal et', 'btn danger'); cancel.type = 'button';
+    const ask = make('div', null, 'ask'); ask.hidden = true;
+    ask.append(make('p', 'Rezervasyonunuzu iptal etmek istediğinizden emin misiniz? Bu işlem geri alınamaz.'));
+    const yes = make('button', 'Evet, iptal et', 'btn danger'); yes.type = 'button';
+    const no = make('button', 'Vazgeç', 'btn ghost'); no.type = 'button';
+    ask.append(yes, no);
+    cancel.onclick = () => { cancel.hidden = true; ask.hidden = false; };
+    no.onclick = () => { ask.hidden = true; cancel.hidden = false; };
+    yes.onclick = async () => {
+      yes.disabled = true;
+      try {
+        const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(creds) });
+        const r = await res.json();
+        box.replaceChildren(make('p', res.ok ? 'Rezervasyonunuz iptal edildi. Yeriniz başkasına açıldı. Yeniden rezervasyon yapabilirsiniz.' : (r.error || 'Bir hata oluştu.'), res.ok ? 'ok' : 'error'));
+        if (res.ok) load();
+      } catch { yes.disabled = false; }
+    };
+    box.append(cancel, ask);
+  } else if (d.session) box.append(make('p', 'Oyun tarihi geçtiği için bu rezervasyon iptal edilemez.', 'muted'));
+  box.hidden = false;
+}
+
+load().then(openSorgu);

@@ -6,6 +6,33 @@ const sessions = config.sessions.map((s) => ({ ...s, id: `${s.date}T${s.time}` }
 const sessionById = new Map(sessions.map((s) => [s.id, s]));
 const limits = { maxSeatsPerPhone: 8, maxReservationsPerIpPerHour: 4, minFormSeconds: 4, ...(config.limits || {}) };
 
+const siteUrl = (config.site?.url || '').replace(/\/$/, '');
+
+// ---- veritabanı şeması: ilk istekte eksik tablo/sütunlar kendiliğinden eklenir (elle migrasyon gerekmez) ----
+const SCHEMA = [
+  `CREATE TABLE IF NOT EXISTS reservations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL UNIQUE, session_id TEXT NOT NULL, name TEXT NOT NULL, surname TEXT NOT NULL,
+    phone TEXT NOT NULL, phone_norm TEXT NOT NULL, email TEXT, seats INTEGER NOT NULL, payment_method TEXT NOT NULL, paid INTEGER NOT NULL DEFAULT 0,
+    note TEXT, reminder_sent INTEGER NOT NULL DEFAULT 0, arrived INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')))`,
+  'CREATE INDEX IF NOT EXISTS idx_res_session ON reservations(session_id)',
+  'CREATE INDEX IF NOT EXISTS idx_res_phone ON reservations(phone_norm)',
+  'CREATE TABLE IF NOT EXISTS hits (kind TEXT NOT NULL, ip TEXT NOT NULL, ts INTEGER NOT NULL)',
+  'CREATE INDEX IF NOT EXISTS idx_hits ON hits(kind, ip, ts)',
+  `CREATE TABLE IF NOT EXISTS waitlist (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id TEXT NOT NULL, email TEXT NOT NULL, name TEXT,
+    notified INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')))`,
+  'CREATE INDEX IF NOT EXISTS idx_wait_session ON waitlist(session_id)',
+];
+const NEW_COLUMNS = [['arrived', 'ALTER TABLE reservations ADD COLUMN arrived INTEGER NOT NULL DEFAULT 0']];
+let schemaReady;
+function ensureSchema(env) {
+  schemaReady ??= (async () => {
+    await env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q)));
+    const cols = (await env.DB.prepare('PRAGMA table_info(reservations)').all()).results.map((c) => c.name);
+    for (const [name, ddl] of NEW_COLUMNS) if (!cols.includes(name)) await env.DB.prepare(ddl).run();
+  })().catch((e) => { schemaReady = undefined; throw e; });
+  return schemaReady;
+}
+
 const isPast = (s) => new Date(`${s.date}T${s.time}:00+03:00`) < new Date(); // İstanbul saati
 const clean = (v, max) => String(v ?? '').trim().slice(0, max);
 const normPhone = (p) => String(p).replace(/\D/g, '').slice(-10);
@@ -75,6 +102,19 @@ async function makeMailer(env) {
   }
   return null;
 }
+const durationMin = parseInt(config.play.duration, 10) || 95;
+function calTimes(session) { // İstanbul = UTC+3 (yaz saati uygulaması yok)
+  const start = new Date(`${session.date}T${session.time}:00+03:00`);
+  const end = new Date(start.getTime() + durationMin * 60000);
+  const f = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  return { start: f(start), end: f(end) };
+}
+function googleCal(session) {
+  const t = calTimes(session);
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: config.play.title, dates: `${t.start}/${t.end}`, location: `${config.venue.name}, ${config.venue.address}`, details: config.play.tagline || '' });
+  return `https://calendar.google.com/calendar/render?${q}`;
+}
+const manageLine = () => (siteUrl ? `\nRezervasyonunuzu görüntülemek veya iptal etmek için: ${siteUrl}/#sorgu` : '');
 const dayLabel = (date) => new Date(date + 'T12:00:00Z').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long', timeZone: 'UTC' });
 const waLine = () => (config.contact?.whatsapp ? `\nSorularınız ya da değişiklik için WhatsApp: ${config.contact.whatsapp}` : '');
 function details({ code, session, seats, method }) {
@@ -86,9 +126,9 @@ function details({ code, session, seats, method }) {
   return `Rezervasyon kodu: ${code}\nTarih: ${dayLabel(session.date)}, saat ${session.time}\nKişi sayısı: ${seats}\nYer: ${config.venue.name}, ${config.venue.address}${map}\n${pay}`;
 }
 const confirmationText = (r, session) =>
-  `Merhaba ${r.name},\n\n${config.play.title} için rezervasyonunuz onaylandı.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nGişede rezervasyon kodunuzu söylemeniz yeterli. Oyundan önceki gün size bir hatırlatma maili göndereceğiz.${waLine()}\n\nGörüşmek üzere!`;
+  `Merhaba ${r.name},\n\n${config.play.title} için rezervasyonunuz onaylandı.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nGişede rezervasyon kodunuzu söylemeniz yeterli. Oyundan önceki gün size bir hatırlatma maili göndereceğiz.\n\nTakvime ekle: ${googleCal(session)}${manageLine()}${waLine()}\n\nGörüşmek üzere!`;
 const reminderText = (r, session) =>
-  `Merhaba ${r.name},\n\n${config.play.title} oyunu yarın akşam saat ${session.time}'de başlıyor. Rezervasyonunuzu hatırlatmak istedik.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nOyun başlamadan en az 15 dakika önce gelmenizi öneririz. Planınız değiştiyse lütfen bizi bilgilendirin ki yerinizi başkasına açabilelim.${waLine()}\n\nGörüşmek üzere!`;
+  `Merhaba ${r.name},\n\n${config.play.title} oyunu yarın akşam saat ${session.time}'de başlıyor. Rezervasyonunuzu hatırlatmak istedik.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nOyun başlamadan en az 15 dakika önce gelmenizi öneririz. Planınız değiştiyse lütfen rezervasyonunuzu iptal edin ki yerinizi başkasına açabilelim.${manageLine()}${waLine()}\n\nGörüşmek üzere!`;
 
 // ---- genel veri ----
 async function taken(db) {
@@ -99,7 +139,7 @@ async function publicShow(db) {
   const t = await taken(db);
   return {
     play: config.play, venue: config.venue, price: config.price, instagram: config.instagram, cast: config.cast, maxSeats: config.maxSeatsPerReservation,
-    contact: config.contact || {},
+    contact: config.contact || {}, faq: config.faq || [], site: config.site || {},
     payment: { onlineEnabled: !!config.payment.onlineEnabled, iban: config.payment.iban, accountName: config.payment.accountName, bank: config.payment.bank, note: config.payment.note },
     sessions: sessions.filter((s) => !isPast(s)).map((s) => {
       const remaining = Math.max(0, s.capacity - (t[s.id] || 0));
@@ -160,6 +200,73 @@ async function reserve(req, env, ctx) {
   }
 }
 
+
+// ---- rezervasyon sorgulama / iptal / bekleme listesi ----
+async function findReservation(db, code, phone) {
+  const pn = normPhone(phone);
+  if (pn.length !== 10) return null;
+  const r = await db.prepare('SELECT * FROM reservations WHERE code = ?').bind(String(code || '').trim().toUpperCase()).first();
+  return r && r.phone_norm === pn ? r : null;
+}
+async function notifyWaitlist(env, sessionId, freedSeats) { // yer açılınca bekleme listesindeki en eski kişilere haber ver
+  const s = sessionById.get(sessionId);
+  if (!s || isPast(s)) return;
+  const { results } = await env.DB.prepare('SELECT * FROM waitlist WHERE session_id = ? AND notified = 0 ORDER BY id LIMIT ?').bind(sessionId, Math.max(1, freedSeats)).all();
+  if (!results.length) return;
+  const mailer = await makeMailer(env);
+  if (!mailer) return;
+  const done = [];
+  for (const w of results) {
+    const text = `Merhaba${w.name ? ' ' + w.name : ''},\n\n${dayLabel(s.date)} saat ${s.time} oyunu için bekleme listesine yazılmıştınız. Şu an yer açıldı.\n\nYerler hızla dolabilir, rezervasyon için: ${siteUrl || ''}\n\n${config.play.title}`;
+    if (await mailer.send(w.email, `Yer açıldı – ${config.play.title}`, text)) done.push(w.id);
+  }
+  await mailer.close();
+  if (done.length) await env.DB.batch(done.map((id) => env.DB.prepare('UPDATE waitlist SET notified = 1 WHERE id = ?').bind(id)));
+}
+async function lookupOrCancel(req, env, ctx, cancel) {
+  const ip = req.headers.get('CF-Connecting-IP') || 'bilinmiyor';
+  if ((await hitCount(env.DB, 'lookup', ip, 15 * 60 * 1000)) >= 10) return json({ error: 'Çok fazla deneme. Biraz sonra tekrar deneyin.' }, 429);
+  let b = {}; try { b = await req.json(); } catch {}
+  const r = await findReservation(env.DB, b.code, b.phone);
+  if (!r) { await addHit(env.DB, 'lookup', ip); return json({ error: 'Bu kod ve telefon numarasıyla rezervasyon bulunamadı.' }, 404); }
+  const s = sessionById.get(r.session_id);
+  if (!cancel) {
+    return json({ ok: true, code: r.code, name: r.name, surname: r.surname, seats: r.seats, total: r.seats * config.price.amount, paid: !!r.paid,
+      session: s ? { date: s.date, time: s.time } : null, canCancel: !!s && !isPast(s) });
+  }
+  if (!s || isPast(s)) return json({ error: 'Oyun tarihi geçtiği için bu rezervasyon iptal edilemez.' }, 409);
+  await env.DB.prepare('DELETE FROM reservations WHERE id = ?').bind(r.id).run();
+  ctx.waitUntil((async () => {
+    await notifyWaitlist(env, r.session_id, r.seats);
+    if (r.email) {
+      const mailer = await makeMailer(env);
+      if (mailer) { await mailer.send(r.email, `Rezervasyonunuz iptal edildi – ${config.play.title}`, `Merhaba ${r.name},\n\n${dayLabel(s.date)} saat ${s.time} için ${r.seats} kişilik rezervasyonunuz (${r.code}) iptal edildi.\n\nYeniden rezervasyon yapmak isterseniz: ${siteUrl || ''}${waLine()}`); await mailer.close(); }
+    }
+  })().catch((e) => console.error(e.message)));
+  return json({ ok: true });
+}
+async function joinWaitlist(req, env, ctx) {
+  const ip = req.headers.get('CF-Connecting-IP') || 'bilinmiyor';
+  if ((await hitCount(env.DB, 'wait', ip, 3600 * 1000)) >= 5) return json({ error: 'Çok fazla deneme. Daha sonra tekrar deneyin.' }, 429);
+  let b = {}; try { b = await req.json(); } catch {}
+  const s = sessionById.get(b.sessionId);
+  const email = clean(b.email, 120), name = clean(b.name, 60);
+  if (!s || isPast(s)) return json({ error: 'Lütfen geçerli bir tarih seçin.' }, 400);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: 'Geçerli bir e-posta adresi girin.' }, 400);
+  const left = s.capacity - ((await taken(env.DB))[s.id] || 0);
+  if (left > 0) return json({ error: 'Bu tarihte yer var, doğrudan rezervasyon yapabilirsiniz.' }, 409);
+  const exists = await env.DB.prepare('SELECT id FROM waitlist WHERE session_id = ? AND email = ?').bind(s.id, email).first();
+  const n = (await env.DB.prepare('SELECT COUNT(*) AS n FROM waitlist WHERE session_id = ?').bind(s.id).first()).n;
+  if (!exists && n >= 100) return json({ error: 'Bekleme listesi dolu.' }, 409);
+  if (!exists) await env.DB.prepare('INSERT INTO waitlist (session_id, email, name) VALUES (?, ?, ?)').bind(s.id, email, name || null).run();
+  await addHit(env.DB, 'wait', ip);
+  if (!exists) ctx.waitUntil((async () => {
+    const mailer = await makeMailer(env);
+    if (mailer) { await mailer.send(email, `Bekleme listesindesiniz – ${config.play.title}`, `Merhaba${name ? ' ' + name : ''},\n\n${dayLabel(s.date)} saat ${s.time} oyunu için bekleme listesine eklendiniz. Yer açılırsa size e-posta ile haber vereceğiz.${waLine()}`); await mailer.close(); }
+  })().catch((e) => console.error(e.message)));
+  return json({ ok: true });
+}
+
 // ---- yönetici ----
 async function adminLogin(req, env) {
   const ip = req.headers.get('CF-Connecting-IP') || 'bilinmiyor';
@@ -179,6 +286,7 @@ async function adminData(env) {
       return { id: s.id, date: s.date, time: s.time, capacity: s.capacity, people: mine.reduce((a, r) => a + r.seats, 0), reservations: mine.length, paidPeople: mine.filter((r) => r.paid).reduce((a, r) => a + r.seats, 0) };
     }),
     reservations: rows.map(({ phone_norm, ...r }) => r),
+    waitlist: (await env.DB.prepare('SELECT id, session_id, email, name, notified, created_at FROM waitlist ORDER BY session_id, id').all()).results,
   };
 }
 async function adminCsv(env) {
@@ -212,14 +320,46 @@ async function runReminders(env, now = new Date()) {
   return { sent: done.length };
 }
 
+
+// ---- yönetici için günlük özet maili ----
+async function sendSummary(env, now = new Date()) {
+  if (config.summary?.enabled === false) return { summary: false };
+  const to = env.SUMMARY_TO || env.SMTP_USER || (env.MAIL_MODE === 'console' ? 'yonetici@localhost' : '');
+  if (!to) return { summary: false };
+  const mailer = await makeMailer(env);
+  if (!mailer) return { summary: false };
+  const { results: rows } = await env.DB.prepare('SELECT session_id, seats, paid, created_at FROM reservations').all();
+  const { results: waits } = await env.DB.prepare('SELECT session_id, COUNT(*) AS n FROM waitlist WHERE notified = 0 GROUP BY session_id').all();
+  const upcoming = sessions.filter((x) => !isPast(x));
+  if (!upcoming.length) { await mailer.close(); return { summary: false }; }
+  const dayAgo = now.getTime() - 24 * 3600 * 1000;
+  const fresh = rows.filter((r) => new Date(r.created_at.replace(' ', 'T') + 'Z').getTime() > dayAgo);
+  const lines = upcoming.map((x) => {
+    const mine = rows.filter((r) => r.session_id === x.id);
+    const people = mine.reduce((a, r) => a + r.seats, 0);
+    const paid = mine.filter((r) => r.paid).reduce((a, r) => a + r.seats, 0);
+    const w = waits.find((q) => q.session_id === x.id)?.n || 0;
+    return `${dayLabel(x.date)} ${x.time}: ${people}/${x.capacity} kişi (${mine.length} rezervasyon, ${paid} kişinin ödemesi alındı${w ? `, ${w} kişi bekleme listesinde` : ''})`;
+  });
+  const total = rows.reduce((a, r) => a + r.seats, 0);
+  const text = `Günaydın,\n\nSon 24 saatte ${fresh.length} yeni rezervasyon geldi (${fresh.reduce((a, r) => a + r.seats, 0)} kişi).\nToplam ${total} kişilik rezervasyon var.\n\nOyun günleri:\n${lines.join('\n')}${siteUrl ? `\n\nYönetim paneli: ${siteUrl}/yonetim` : ''}`;
+  const ok = await mailer.send(to, `Günlük özet – ${config.play.title}`, text);
+  await mailer.close();
+  return { summary: ok };
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const path = url.pathname;
     const method = req.method;
     try {
+      if (path.startsWith('/api/')) await ensureSchema(env);
       if (path === '/api/show' && method === 'GET') return json(await publicShow(env.DB));
       if (path === '/api/reservations' && method === 'POST') return await reserve(req, env, ctx);
+      if (path === '/api/lookup' && method === 'POST') return await lookupOrCancel(req, env, ctx, false);
+      if (path === '/api/cancel' && method === 'POST') return await lookupOrCancel(req, env, ctx, true);
+      if (path === '/api/waitlist' && method === 'POST') return await joinWaitlist(req, env, ctx);
       if (path === '/api/admin/login' && method === 'POST') return await adminLogin(req, env);
       if (path === '/api/admin/logout' && method === 'POST') return json({ ok: true }, 200, { 'Set-Cookie': 'admin=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0' });
       if (path.startsWith('/api/admin/')) {
@@ -229,11 +369,17 @@ export default {
         const m = path.match(/^\/api\/admin\/reservations\/(\d+)$/);
         if (m && method === 'PATCH') {
           let b = {}; try { b = await req.json(); } catch {}
-          const r = await env.DB.prepare('UPDATE reservations SET paid = ? WHERE id = ?').bind(b.paid ? 1 : 0, Number(m[1])).run();
+          const sets = [], vals = [];
+          if ('paid' in b) { sets.push('paid = ?'); vals.push(b.paid ? 1 : 0); }
+          if ('arrived' in b) { sets.push('arrived = ?'); vals.push(b.arrived ? 1 : 0); }
+          if (!sets.length) return json({ ok: false }, 400);
+          const r = await env.DB.prepare(`UPDATE reservations SET ${sets.join(', ')} WHERE id = ?`).bind(...vals, Number(m[1])).run();
           return json({ ok: r.meta.changes > 0 });
         }
         if (m && method === 'DELETE') {
+          const old = await env.DB.prepare('SELECT session_id, seats FROM reservations WHERE id = ?').bind(Number(m[1])).first();
           const r = await env.DB.prepare('DELETE FROM reservations WHERE id = ?').bind(Number(m[1])).run();
+          if (old) ctx.waitUntil(notifyWaitlist(env, old.session_id, old.seats).catch((e) => console.error(e.message)));
           return json({ ok: r.meta.changes > 0 });
         }
       }
@@ -244,6 +390,11 @@ export default {
     }
   },
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(runReminders(env, env.FAKE_NOW ? new Date(env.FAKE_NOW) : new Date()).then((r) => console.log('Hatırlatma:', JSON.stringify(r))).catch((e) => console.error('Hatırlatma hatası:', e.message)));
+    const now = env.FAKE_NOW ? new Date(env.FAKE_NOW) : new Date();
+    ctx.waitUntil((async () => {
+      await ensureSchema(env);
+      console.log('Hatırlatma:', JSON.stringify(await runReminders(env, now)));
+      console.log('Özet:', JSON.stringify(await sendSummary(env, now)));
+    })().catch((e) => console.error('Zamanlanmış görev hatası:', e.message)));
   },
 };

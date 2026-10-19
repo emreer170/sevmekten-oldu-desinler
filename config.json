@@ -2,9 +2,9 @@
   "play": {
     "title": "Sevmekten Öldü Desinler!",
     "tagline": "“Masal işte, sevmekten öldü desinler.”",
-    "description": "İstanbul'un içinden ya ölerek ya da kaçarak çıkılan bir mahallesinde, Işıklı Gönül tek bir karar verir: gitmek. Arkasında beste yapmaktan vazgeçmeyen Mustafa, peşini bırakmayan Sevda ve ağır bir ev vardır. Önünde ise tek bir kapı: Butik Pavyon.\nHamdi'nin sahnesi, Ahmet'in kabuğunu kırma cesareti, Sevda'nın bitmeyen sabrı ve hepimizin ezbere bildiği şarkılar. Güldüren, boğazı düğümleyen, sonunda yine de “iyi ki” dedirten müzikli bir akşam.\n16 yaş ve üzeri seyirciye uygundur. Küfür, şiddet ve ağır temalar içerir.",
+    "description": "İstanbul'un içinden ya ölerek ya da kaçarak çıkılan bir mahallesinde, Işıklı Gönül tek bir karar verir: gitmek. Arkasında beste yapmaktan vazgeçmeyen Mustafa, peşini bırakmayan Sevda ve ağır bir ev vardır. Önünde ise tek bir kapı: Butik Pavyon.\nHamdi'nin sahnesi, Ahmet'in kabuğunu kırma cesareti, Sevda'nın bitmeyen sabrı ve hepimizin ezbere bildiği şarkılar. Güldüren, boğazı düğümleyen, sonunda yine de “iyi ki” dedirten müzikli bir akşam.\n14 yaş ve üzeri seyirciye uygundur. Küfür, şiddet ve ağır temalar içerir.",
     "duration": "95 dakika",
-    "ageLimit": "16+",
+    "ageLimit": "14+",
     "director": "Tevfik Şahin",
     "poster": "",
     "video": "",
@@ -14,7 +14,8 @@
     "name": "Butik Oyunculuk Atölyesi",
     "address": "Acıbadem Mah. Sarayardı Cad. No:82 D:6, Çakmak İş Merkezi Kat:1, 34714 Kadıköy / İstanbul",
     "mapUrl": "https://www.google.com/maps/search/?api=1&query=Butik%20Oyunculuk%20At%C3%B6lyesi%20Kad%C4%B1k%C3%B6y%20Sarayard%C4%B1%20Caddesi%2082",
-    "city": "Kadıköy / İstanbul"
+    "city": "Kadıköy / İstanbul",
+    "transport": ""
   },
   "price": {
     "amount": 300,
@@ -158,5 +159,45 @@
   },
   "contact": {
     "whatsapp": ""
-  }
+  },
+  "site": {
+    "url": "https://sevmekten-oldu-desinler.sod-oyun.workers.dev"
+  },
+  "summary": {
+    "enabled": true
+  },
+  "faq": [
+    {
+      "q": "Oyun ne kadar sürer?",
+      "a": "Oyun 95 dakika sürer. Başlamadan en az 15 dakika önce salonda olmanızı öneririz."
+    },
+    {
+      "q": "Yaş sınırı var mı?",
+      "a": "Oyun 14 yaş ve üzeri seyirciye uygundur. Oyun küfür, şiddet ve ağır temalar içerir."
+    },
+    {
+      "q": "Bilet ücreti nedir, nasıl ödenir?",
+      "a": "Erken rezervasyon fiyatı kişi başı 300 TL'dir. Ödeme oyun günü gişede yalnızca nakit olarak alınır."
+    },
+    {
+      "q": "Rezervasyon yaptım, şimdi ne yapmalıyım?",
+      "a": "Hiçbir şey. Onay mailine ve ekrandaki koda bakın. Oyun günü gişede rezervasyon kodunuzu söylemeniz yeterli. Oyundan bir gün önce size hatırlatma maili göndeririz."
+    },
+    {
+      "q": "Rezervasyonumu iptal edebilir miyim?",
+      "a": "Evet. Sayfanın altındaki \"Rezervasyonumu görüntüle veya iptal et\" bölümüne kodunuzu ve telefon numaranızı yazmanız yeterli. İptal ederseniz yeriniz başkasına açılır."
+    },
+    {
+      "q": "Bir seferde kaç kişilik rezervasyon yapabilirim?",
+      "a": "Tek rezervasyonda en fazla 6 kişi, aynı telefon numarasıyla toplamda en fazla 8 kişilik yer ayırtabilirsiniz."
+    },
+    {
+      "q": "Aradığım tarih dolu, ne yapabilirim?",
+      "a": "Rezervasyon bölümünün altındaki bekleme listesine e-posta adresinizi bırakın. Yer açılırsa size haber veririz."
+    },
+    {
+      "q": "Sorum başka bir şey, nereden ulaşırım?",
+      "a": "WhatsApp numaramızdan bize yazabilirsiniz. Numara sayfada rezervasyon bölümünün altında yer alıyor."
+    }
+  ]
 }

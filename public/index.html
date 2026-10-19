@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Onest:wght@400;500;600&display=swap"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/tema.css"></head>
 <body class="v-a b3">
-<header class="top"><a class="brand" href="#">Sevmekten Öldü Desinler!</a><nav><a href="#bilet">Biletler</a><a href="#oyuncular">Oyuncular</a></nav></header>
+<header class="top"><a class="brand" href="#">Sevmekten Öldü Desinler!</a><nav><a href="#bilet">Biletler</a><a href="#oyuncular">Oyuncular</a><a href="#ulasim">Ulaşım</a><a href="#sss">SSS</a></nav></header>
 <div class="marquee" id="marquee" role="marquee" aria-label="Oyuncu kadrosu" hidden><div class="track" id="track"></div></div>
 <section class="event">
   
@@ -28,7 +28,8 @@
       <p id="tagline" class="tagline"></p>
       <div id="description" class="desc"></div>
       <p id="director" class="by" hidden></p>
-      <a class="btn" href="#bilet">Bilet Al</a>
+      <div class="actions"><a class="btn" href="#bilet">Bilet Al</a><button type="button" class="btn ghost" id="shareBtn">Paylaş</button></div>
+      <p class="muted" id="shareNote" hidden></p>
     </div>
     <aside class="hero-side" aria-label="Oyun bilgileri"><dl class="spec">
       <div><dt>Tarih</dt><dd>31 Ekim – 26 Aralık<small>Her cumartesi · 20:30</small></dd></div>
@@ -68,15 +69,49 @@
       <div class="total"><span>Toplam</span><strong id="total">—</strong></div>
       <p id="error" class="error" role="alert" hidden></p>
       <button class="btn block" id="submit" type="submit">Rezervasyonu Tamamla</button></form>
+
+    <div id="waitBox" class="wait" hidden>
+      <h3>Aradığınız tarih dolu mu?</h3>
+      <p class="muted">Yer açılırsa size e-posta ile haber verelim.</p>
+      <form id="waitForm" novalidate>
+        <label>Tarih<select id="waitSession" name="sessionId"></select></label>
+        <div class="row"><label>Ad <small>(isteğe bağlı)</small><input name="name" autocomplete="given-name"></label><label>E-posta<input name="email" type="email" autocomplete="email" inputmode="email" required></label></div>
+        <button class="btn ghost" type="submit">Bekleme listesine yaz</button>
+        <p id="waitMsg" class="muted" role="status" hidden></p>
+      </form>
+    </div>
     <div id="done" hidden>
       <h2>Rezervasyonunuz alındı</h2>
       <p>Rezervasyon kodunuz</p><p class="code" id="code"></p><p id="summary"></p>
       <div id="bank" class="bank" hidden><p><strong>Ödeme için IBAN</strong></p><p class="iban" id="iban"></p><p id="bankInfo"></p><button type="button" class="btn ghost" id="copyIban">IBAN'ı kopyala</button></div>
       <p class="muted">Bu kodu saklayın, gişede söylemeniz yeterli.</p>
+      <div class="actions center"><a class="btn" id="gcal" target="_blank" rel="noopener">Google Takvim'e ekle</a><a class="btn ghost" id="ics">Takvime ekle (.ics)</a></div>
       <p class="wa" id="waDone" hidden></p>
+      <button type="button" class="btn ghost" id="shareDone">Arkadaşlarına haber ver</button>
     </div>
   </section>
+
+  <details id="sorgu" class="sorgu">
+    <summary>Rezervasyonumu görüntüle veya iptal et</summary>
+    <form id="lookupForm" novalidate>
+      <div class="row"><label>Rezervasyon kodu<input name="code" autocomplete="off" autocapitalize="characters" maxlength="10" required></label><label>Telefon<input name="phone" type="tel" inputmode="tel" required></label></div>
+      <button class="btn" type="submit">Göster</button>
+    </form>
+    <p id="lookupErr" class="error" role="alert" hidden></p>
+    <div id="lookupResult" hidden></div>
+  </details>
 <section id="oyuncular" class="section" hidden><h2>Oyuncular</h2><p class="lead" id="directorLine"></p><div class="cast" id="cast"></div></section>
+<section id="ulasim" class="section"><h2>Ulaşım</h2>
+  <p class="lead" id="transportAddr"></p>
+  <p class="muted" id="transportNote" hidden></p>
+  <div class="actions"><a class="btn" id="dirBtn" target="_blank" rel="noopener">Yol tarifi al</a></div>
+  <div class="mapbox"><iframe id="mapFrame" title="Mekan haritası" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
+</section>
+<section id="sss" class="section"><h2>Sık sorulan sorular</h2><div class="faq" id="faq"></div></section>
+<section id="paylas" class="section share"><h2>Instagram hikâyende paylaş</h2>
+  <p class="lead">Hazır görseli indir, hikâyene ekle ve linki sticker olarak yapıştır. Biletler için bio'daki link yeterli.</p>
+  <div class="actions"><a class="btn" href="/hikaye.png" download="sevmekten-oldu-desinler-hikaye.png">Hikâye görselini indir</a><button type="button" class="btn ghost" id="copyLink">Linki kopyala</button></div>
+</section>
   </main>
 <footer><a id="insta" hidden target="_blank" rel="noopener">Instagram</a><span>© Sevmekten Öldü Desinler!</span></footer>
 <div class="sticky-cta"><span><b id="stickyPrice"></b><small>Erken rezervasyon</small></span><a class="btn" href="#bilet">Bilet Al</a></div>

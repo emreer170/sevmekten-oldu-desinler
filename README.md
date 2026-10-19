@@ -37,8 +37,8 @@ Değişiklikten sonra sunucuyu yeniden başlatın. Oyuncu fotoğrafları `public
 3. Ekrandaki sorulara cevap ver: tarayıcıda Cloudflare'e giriş (hesap ücretsiz, kart istemez), panel şifresi, istersen Gmail bilgileri.
 4. Bittiğinde ekranda `https://sevmekten-oldu-desinler.….workers.dev` adresi görünür. Panel: adresin sonuna `/yonetim`.
 - Siteyi güncellemek için (örn. `config.json` değişince) aynı dosyayı yeniden çalıştır.
-- Bilgisayarda deneme için eski `baslat` dosyaları çalışmaya devam eder (ayrı bir deneme veritabanı kullanır).
-- Cloudflare sürümü `worker/index.js` ve `schema.sql` dosyalarında, yerel sürüm `server.js` içindedir. İkisi de aynı `config.json` ve `public/` klasörünü kullanır.
+- Bilgisayarda deneme için eski `baslat` dosyaları Cloudflare ortamını bilgisayarında taklit eder (ayrı bir deneme veritabanı, mailler konsola yazılır).
+- Cloudflare sürümü `worker/index.js` ve `schema.sql` dosyalarında, tek kod yolu: `worker/index.js`. Statik sayfalar `config.json` ve `public/` klasörünü kullanır.
 
 ## Otomatik yayın (GitHub → Cloudflare) — kurulu
 Cloudflare bu depoya bağlandı (kurulum tamam). Dala dala her push yapıldığında site kendiliğinden güncellenir (`yayinla.bat` gerekmez).

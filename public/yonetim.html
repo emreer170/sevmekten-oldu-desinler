@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Yönetim – Rezervasyonlar</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600&family=Onest:wght@400;500;600&display=swap">
 <style>
@@ -12,13 +13,13 @@
     --head:Newsreader,Georgia,serif; --body:Onest,system-ui,sans-serif; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1rem/1.55 var(--body); -webkit-font-smoothing: antialiased; }
-  h1, h2 { font-family: var(--head); font-weight: 500; margin: 0; line-height: 1.1; }
-  button, input { font: inherit; color: inherit; }
+  h1, h2, h3 { font-family: var(--head); font-weight: 500; margin: 0; line-height: 1.1; }
+  button, input, select { font: inherit; color: inherit; }
   button { cursor: pointer; background: #fff; border: 1px solid var(--ink); padding: .5rem .9rem; border-radius: 0; font-size: .875rem; font-weight: 500; }
   button:hover { background: var(--surface-2); }
   button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   button.primary:hover { filter: brightness(1.08); }
-  input { border: 1px solid var(--ink); background: #fff; padding: .6rem .8rem; border-radius: 0; }
+  input, select { border: 1px solid var(--ink); background: #fff; padding: .6rem .8rem; border-radius: 0; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   [hidden] { display: none !important; }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
@@ -30,13 +31,16 @@
   #login h1 { font-size: 2rem; } #login p { margin: 0; color: var(--muted); }
   #err { color: var(--accent); font-size: .875rem; min-height: 1.3em; }
 
-  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; padding: 2rem 0 1.25rem; }
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin: 1.25rem 0 0; overflow-x: auto; }
+  .tabs button { border: 0; border-bottom: 3px solid transparent; padding: .75rem 1.25rem; font-size: 1rem; background: none; color: var(--muted); white-space: nowrap; }
+  .tabs button[aria-selected=true] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; padding: 1.5rem 0 1.25rem; }
   .head h1 { font-size: 2.25rem; }
   .tools { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
   .tools input { width: 15rem; max-width: 100%; }
   .tools a { text-decoration: none; color: inherit; }
 
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--ink); margin-bottom: 1.75rem; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--ink); margin: 0 0 1.75rem; }
   .stats div { padding: 1rem 0 1rem 1.25rem; } .stats div:first-child { padding-left: 0; }
   .stats div + div { border-left: 1px solid var(--line); }
   .stats dt { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
@@ -60,16 +64,45 @@
   .tag.ok { background: var(--ok-soft); color: var(--ok); } .tag.wait { background: var(--soft); color: var(--accent); }
   .act { white-space: nowrap; } .act button { padding: .35rem .65rem; font-size: .8125rem; }
   td a { color: var(--ink); }
-  #empty { color: var(--muted); padding: 2rem 0; }
+  .empty { color: var(--muted); padding: 2rem 0; }
+
+  /* gişe */
+  .doorbar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin: 1.5rem 0 1rem; }
+  .doorbar select { font-size: 1rem; min-width: 15rem; max-width: 100%; }
+  .doorsum { display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1rem 0; border-block: 1px solid var(--ink); margin-bottom: 1rem; }
+  .doorsum div { min-width: 7rem; } .doorsum b { display: block; font: 600 1.75rem var(--head); } .doorsum span { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .guests { display: grid; gap: .625rem; }
+  .guest { display: grid; grid-template-columns: 1fr auto; gap: .5rem 1rem; align-items: center; padding: .875rem 1rem; border: 1px solid var(--line); }
+  .guest.in { border-color: var(--ok); background: var(--ok-soft); }
+  .guest h3 { font: 600 1.125rem var(--body); display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
+  .guest .meta { color: var(--muted); font-size: .875rem; }
+  .guest .meta a { color: var(--muted); }
+  .guest .btns { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .guest button { padding: .75rem 1.1rem; font-size: .9375rem; min-width: 7.5rem; }
+  .guest button.on { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .pill { font: 600 .8125rem var(--body); background: var(--ink); color: #fff; padding: .1rem .5rem; }
+
+  /* istatistik */
+  .charts { display: grid; gap: 2.5rem; margin-top: 1.5rem; }
+  .chart h2 { font-size: 1.375rem; margin-bottom: .25rem; } .chart p.sub { color: var(--muted); font-size: .875rem; margin: 0 0 1rem; }
+  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart text { font-family: var(--body); fill: var(--muted); font-size: 12px; }
+  .chart .lbl { fill: var(--ink); font-weight: 500; }
+  .chart .tip { position: absolute; pointer-events: none; background: var(--ink); color: #fff; padding: .4rem .6rem; font-size: .8125rem; white-space: nowrap; transform: translate(-50%, -120%); }
+  .chartbox { position: relative; }
+  details.tbl summary { cursor: pointer; font-size: .875rem; color: var(--muted); margin-top: .75rem; }
+  details.tbl table { margin-top: .5rem; font-size: .875rem; } details.tbl td, details.tbl th { padding: .4rem .6rem; }
+  .waitlist td { padding: .5rem .6rem; }
 
   @media (max-width: 760px) {
     .stats { grid-template-columns: 1fr 1fr; } .stats div:nth-child(3) { padding-left: 0; border-left: 0; } .stats div:nth-child(n+3) { border-top: 1px solid var(--line); }
-    table, tbody, tr, td { display: block; } thead { display: none; }
-    tr { border: 1px solid var(--line); padding: .5rem .875rem; margin-bottom: .75rem; }
-    td { border: 0; padding: .25rem 0; display: flex; justify-content: space-between; gap: 1rem; } td::before { content: attr(data-l); color: var(--muted); font-size: .8125rem; flex: none; }
-    .act { justify-content: flex-start; padding-top: .5rem; } .act::before { display: none; }
+    table.res, table.res tbody, table.res tr, table.res td { display: block; } table.res thead { display: none; }
+    table.res tr { border: 1px solid var(--line); padding: .5rem .875rem; margin-bottom: .75rem; }
+    table.res td { border: 0; padding: .25rem 0; display: flex; justify-content: space-between; gap: 1rem; } table.res td::before { content: attr(data-l); color: var(--muted); font-size: .8125rem; flex: none; }
+    table.res .act { justify-content: flex-start; padding-top: .5rem; } table.res .act::before { display: none; }
+    .guest { grid-template-columns: 1fr; } .guest button { flex: 1; }
   }
-  @media print { .top, .tools, .days, .act, th:last-child { display: none; } .wrap { padding: 0; } }
+  @media print { .top, .tools, .tabs, .days, .act, .btns, .doorbar button { display: none; } .wrap { padding: 0; } }
 </style>
 </head>
 <body>
@@ -84,28 +117,59 @@
 <div id="panel" hidden>
   <header class="top"><div class="wrap"><span class="brand">Sevmekten Öldü Desinler!<small>Yönetim</small></span><button id="logout">Çıkış</button></div></header>
   <div class="wrap">
-    <div class="head">
-      <h1>Rezervasyonlar</h1>
-      <div class="tools">
-        <input id="q" type="search" placeholder="İsim, telefon veya kod ara">
-        <button id="print">Yazdır</button>
-        <a href="/api/admin/export.csv"><button type="button">CSV indir</button></a>
-      </div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="t-res" aria-selected="true">Rezervasyonlar</button>
+      <button role="tab" id="t-door" aria-selected="false">Gişe</button>
+      <button role="tab" id="t-stat" aria-selected="false">İstatistik</button>
     </div>
-    <dl class="stats" id="stats"></dl>
-    <div class="days" id="cards"></div>
-    <div class="list"><table>
-      <thead><tr><th>Kod</th><th>Tarih</th><th>İsim</th><th>Telefon</th><th>Kişi</th><th>Ödeme</th><th></th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table></div>
-    <p id="empty" hidden>Bu görünümde rezervasyon yok.</p>
+
+    <section id="v-res">
+      <div class="head">
+        <h1>Rezervasyonlar</h1>
+        <div class="tools">
+          <input id="q" type="search" placeholder="İsim, telefon veya kod ara">
+          <button id="print">Yazdır</button>
+          <a href="/api/admin/export.csv"><button type="button">CSV indir</button></a>
+        </div>
+      </div>
+      <dl class="stats" id="stats"></dl>
+      <div class="days" id="cards"></div>
+      <div class="list"><table class="res">
+        <thead><tr><th>Kod</th><th>Tarih</th><th>İsim</th><th>Telefon</th><th>Kişi</th><th>Ödeme</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+      <p id="empty" class="empty" hidden>Bu görünümde rezervasyon yok.</p>
+    </section>
+
+    <section id="v-door" hidden>
+      <div class="head"><h1>Gişe listesi</h1><div class="tools"><button id="print2">Yazdır</button></div></div>
+      <div class="doorbar">
+        <label>Oyun günü <select id="doorSession"></select></label>
+        <input id="doorQ" type="search" placeholder="İsim, telefon veya kod ara">
+      </div>
+      <div class="doorsum" id="doorSum"></div>
+      <div class="guests" id="guests"></div>
+      <p id="doorEmpty" class="empty" hidden>Bu oyun gününe ait rezervasyon yok.</p>
+    </section>
+
+    <section id="v-stat" hidden>
+      <div class="head"><h1>İstatistik</h1></div>
+      <div class="charts">
+        <div class="chart"><h2>Doluluk</h2><p class="sub">Her oyun gününde ayrılan kişi sayısı ve kontenjan.</p><div class="chartbox" id="occBox"></div>
+          <details class="tbl"><summary>Tablo olarak göster</summary><div id="occTable"></div></details></div>
+        <div class="chart"><h2>Rezervasyonlar zamanla nasıl arttı</h2><p class="sub">Toplam ayrılan kişi sayısı, gün gün.</p><div class="chartbox" id="lineBox"></div>
+          <details class="tbl"><summary>Tablo olarak göster</summary><div id="lineTable"></div></details></div>
+        <div class="chart"><h2>Bekleme listesi</h2><p class="sub">Dolu tarihler için e-posta bırakanlar.</p><div id="waitBox"></div></div>
+      </div>
+    </section>
   </div>
 </div>
 
 <script>
 const $ = (id) => document.getElementById(id);
 const fmt = (d) => new Date(d + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'short' });
-let data, filter = 'all';
+const fmtShort = (d) => new Date(d + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+let data, filter = 'all', tab = 'res', doorSession = '';
 
 async function api(url, opt) {
   const r = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opt });
@@ -114,14 +178,24 @@ async function api(url, opt) {
 }
 function show(on) { $('login').hidden = on; $('panel').hidden = !on; }
 function el(tag, text, cls) { const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
-const money = (n) => `${n.toLocaleString('tr-TR')}\u00a0${data.price.currency}`;
+const money = (n) => `${n.toLocaleString('tr-TR')} ${data.price.currency}`;
+const patch = (id, body) => api('/api/admin/reservations/' + id, { method: 'PATCH', body: JSON.stringify(body) });
 
 async function load() {
   const r = await fetch('/api/admin/data');
   if (!r.ok) return show(false);
   data = await r.json(); show(true); render();
 }
-function render() {
+function setTab(t) {
+  tab = t;
+  [['res', 'v-res'], ['door', 'v-door'], ['stat', 'v-stat']].forEach(([k, v]) => { $(v).hidden = k !== t; $('t-' + k).setAttribute('aria-selected', String(k === t)); });
+  render();
+}
+['res', 'door', 'stat'].forEach((k) => { $('t-' + k).onclick = () => setTab(k); });
+function render() { if (!data) return; ({ res: renderRes, door: renderDoor, stat: renderStat })[tab](); }
+
+/* ---------- Rezervasyonlar ---------- */
+function renderRes() {
   const S = data.sessions, R = data.reservations;
   const people = S.reduce((a, s) => a + s.people, 0), paid = S.reduce((a, s) => a + s.paidPeople, 0);
   const st = $('stats'); st.replaceChildren();
@@ -133,7 +207,7 @@ function render() {
     const c = el('button', null, 'day' + (filter === id ? ' sel' : ''));
     c.type = 'button'; c.append(el('b', title), el('span', big, 'n'), el('small', sub));
     if (pct != null) { const bar = el('div', null, 'bar'), i = document.createElement('i'); i.style.width = Math.min(100, pct) + '%'; bar.append(i); c.append(bar); }
-    c.onclick = () => { filter = id; render(); }; cards.append(c);
+    c.onclick = () => { filter = id; renderRes(); }; cards.append(c);
   };
   mk('all', 'Tüm tarihler', `${people} kişi`, `${R.length} rezervasyon`);
   S.forEach((s) => mk(s.id, `${fmt(s.date)} · ${s.time}`, `${s.people} / ${s.capacity}`, `${s.reservations} rezervasyon · ${s.paidPeople} kişi ödedi`, s.people / s.capacity * 100));
@@ -146,32 +220,161 @@ function render() {
   rows.forEach((r) => {
     const s = sess[r.session_id], tr = document.createElement('tr');
     const cell = (label, node) => { const td = el('td'); td.dataset.l = label; td.append(node); return td; };
-    const who = el('span', `${r.name} ${r.surname}`);
-    const whoWrap = document.createElement('span'); whoWrap.append(who);
+    const whoWrap = document.createElement('span'); whoWrap.append(el('span', `${r.name} ${r.surname}`));
     if (r.email) whoWrap.append(el('small', r.email));
     if (r.note) whoWrap.append(el('small', '“' + r.note + '”'));
     const a = el('a', r.phone); a.href = 'tel:' + r.phone.replace(/[^+\d]/g, '');
     const pay = el('span', (r.payment_method === 'havale' ? 'Havale' : 'Gişe, nakit') + ' · ' + (r.paid ? 'ödendi' : 'bekliyor'), 'tag ' + (r.paid ? 'ok' : 'wait'));
     const act = el('td', null, 'act');
     const tog = el('button', r.paid ? 'Ödenmedi yap' : 'Ödendi işaretle', r.paid ? '' : 'primary');
-    tog.onclick = async () => { await api('/api/admin/reservations/' + r.id, { method: 'PATCH', body: JSON.stringify({ paid: !r.paid }) }); load(); };
+    tog.onclick = async () => { await patch(r.id, { paid: !r.paid }); load(); };
     const del = el('button', 'Sil');
-    del.onclick = async () => { if (confirm(`${r.name} ${r.surname} rezervasyonu silinsin mi?`)) { await api('/api/admin/reservations/' + r.id, { method: 'DELETE' }); load(); } };
+    del.onclick = async () => { if (confirm(`${r.name} ${r.surname} rezervasyonu silinsin mi? Bekleme listesindeki biri varsa haber verilecek.`)) { await api('/api/admin/reservations/' + r.id, { method: 'DELETE' }); load(); } };
     act.append(tog, ' ', del);
     tr.append(cell('Kod', el('span', r.code, 'code')), cell('Tarih', el('span', s ? `${fmt(s.date)} ${s.time}` : r.session_id)),
       cell('İsim', whoWrap), cell('Telefon', a), cell('Kişi', el('span', r.seats)), cell('Ödeme', pay), act);
     tb.append(tr);
   });
 }
+
+/* ---------- Gişe ---------- */
+function renderDoor() {
+  const sel = $('doorSession');
+  const withRes = data.sessions.filter((s) => s.reservations > 0);
+  if (!sel.options.length) {
+    data.sessions.forEach((s) => sel.append(Object.assign(document.createElement('option'), { value: s.id, textContent: `${fmt(s.date)} · ${s.time}  (${s.people} kişi)` })));
+    const today = new Date().toISOString().slice(0, 10);
+    const next = (withRes.find((s) => s.date >= today) || withRes[0] || data.sessions[0]);
+    doorSession = next?.id || '';
+    sel.value = doorSession;
+  }
+  doorSession = sel.value;
+  const q = $('doorQ').value.trim().toLowerCase();
+  const all = data.reservations.filter((r) => r.session_id === doorSession);
+  const list = all.filter((r) => !q || `${r.name} ${r.surname} ${r.phone} ${r.code}`.toLowerCase().includes(q))
+    .sort((a, b) => `${a.surname} ${a.name}`.localeCompare(`${b.surname} ${b.name}`, 'tr'));
+  const expected = all.reduce((a, r) => a + r.seats, 0), came = all.filter((r) => r.arrived).reduce((a, r) => a + r.seats, 0);
+  const toCollect = all.filter((r) => !r.paid).reduce((a, r) => a + r.seats, 0) * data.price.amount;
+  const sum = $('doorSum'); sum.replaceChildren();
+  [['Beklenen', expected + ' kişi'], ['Gelen', came + ' kişi'], ['Gelmesi beklenen', (expected - came) + ' kişi'], ['Gişede toplanacak', money(toCollect)]]
+    .forEach(([k, v]) => { const d = el('div'); d.append(el('b', v), el('span', k)); sum.append(d); });
+  const box = $('guests'); box.replaceChildren(); $('doorEmpty').hidden = list.length > 0;
+  list.forEach((r) => {
+    const g = el('div', null, 'guest' + (r.arrived ? ' in' : ''));
+    const info = el('div');
+    const h = el('h3'); h.append(`${r.name} ${r.surname}`, el('span', `${r.seats} kişi`, 'pill'));
+    const meta = el('div', null, 'meta'); meta.append(el('span', r.code, 'code'), ' · ');
+    const a = el('a', r.phone); a.href = 'tel:' + r.phone.replace(/[^+\d]/g, ''); meta.append(a);
+    if (r.note) meta.append(' · “' + r.note + '”');
+    info.append(h, meta);
+    const btns = el('div', null, 'btns');
+    const came = el('button', r.arrived ? 'Geldi ✓' : 'Geldi', r.arrived ? 'on' : ''); came.type = 'button';
+    came.onclick = async () => { came.disabled = true; await patch(r.id, { arrived: !r.arrived }); load(); };
+    const pay = el('button', r.paid ? 'Ödeme alındı ✓' : 'Ödeme al', r.paid ? 'on' : ''); pay.type = 'button';
+    pay.onclick = async () => { pay.disabled = true; await patch(r.id, { paid: !r.paid }); load(); };
+    btns.append(came, pay);
+    g.append(info, btns); box.append(g);
+  });
+}
+$('doorSession').onchange = renderDoor; $('doorQ').oninput = renderDoor;
+
+/* ---------- İstatistik (grafikler SVG, tek renk) ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const svgEl = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); if (text != null) e.textContent = text; return e; };
+function tooltip(box) {
+  const t = el('div', null, 'tip'); t.hidden = true; box.append(t);
+  return { show: (x, y, text) => { t.textContent = text; t.style.left = x + 'px'; t.style.top = y + 'px'; t.hidden = false; }, hide: () => { t.hidden = true; } };
+}
+function simpleTable(head, rows) {
+  const t = document.createElement('table'); const hr = document.createElement('tr');
+  head.forEach((h) => hr.append(el('th', h))); const th = document.createElement('thead'); th.append(hr); t.append(th);
+  const tb = document.createElement('tbody'); rows.forEach((r) => { const tr = document.createElement('tr'); r.forEach((c) => tr.append(el('td', c))); tb.append(tr); }); t.append(tb);
+  return t;
+}
+function renderStat() {
+  // 1) doluluk: yatay çubuklar
+  const S = data.sessions;
+  const box = $('occBox'); box.replaceChildren();
+  const W = 640, rowH = 34, left = 118, right = 70, H = S.length * rowH + 8;
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Oyun günlerine göre doluluk' });
+  const maxCap = Math.max(...S.map((s) => s.capacity), 1);
+  const x = (v) => left + (v / maxCap) * (W - left - right);
+  const tip = tooltip(box);
+  [0, .25, .5, .75, 1].forEach((p) => { const gx = x(maxCap * p); svg.append(svgEl('line', { x1: gx, x2: gx, y1: 0, y2: H - 8, stroke: '#e4e4e0', 'stroke-width': 1 })); });
+  S.forEach((s, i) => {
+    const y = i * rowH + 6, cy = y + 11;
+    svg.append(svgEl('text', { x: 0, y: cy + 4, class: 'lbl' }, `${fmtShort(s.date)}`));
+    svg.append(svgEl('rect', { x: left, y, width: x(s.capacity) - left, height: 22, fill: '#f6f6f4' }));
+    const w = Math.max(0, x(s.people) - left);
+    if (w > 0) svg.append(svgEl('rect', { x: left, y, width: w, height: 22, rx: 3, fill: '#c4161c' }));
+    svg.append(svgEl('text', { x: x(s.capacity) + 8, y: cy + 4, class: 'lbl' }, `${s.people} / ${s.capacity}`));
+    const hit = svgEl('rect', { x: 0, y: y - 4, width: W, height: 30, fill: 'transparent' });
+    hit.addEventListener('mousemove', (e) => { const b = box.getBoundingClientRect(); tip.show(e.clientX - b.left, e.clientY - b.top, `${fmt(s.date)}: ${s.people} kişi, %${Math.round(s.people / s.capacity * 100)} dolu`); });
+    hit.addEventListener('mouseleave', tip.hide);
+    svg.append(hit);
+  });
+  box.prepend(svg);
+  $('occTable').replaceChildren(simpleTable(['Tarih', 'Kişi', 'Kontenjan', 'Doluluk'], S.map((s) => [fmt(s.date), s.people, s.capacity, `%${Math.round(s.people / s.capacity * 100)}`])));
+
+  // 2) zaman çizgisi: toplam ayrılan kişi
+  const lb = $('lineBox'); lb.replaceChildren();
+  const byDay = {};
+  data.reservations.forEach((r) => { const d = r.created_at.slice(0, 10); byDay[d] = (byDay[d] || 0) + r.seats; });
+  const days = Object.keys(byDay).sort();
+  if (!days.length) { lb.append(el('p', 'Henüz rezervasyon yok.', 'empty')); $('lineTable').replaceChildren(); }
+  else {
+    const start = new Date(days[0] + 'T12:00:00'), end = new Date(Math.max(new Date(days[days.length - 1] + 'T12:00:00'), start));
+    const series = []; let total = 0;
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) { const k = d.toISOString().slice(0, 10); total += byDay[k] || 0; series.push({ k, added: byDay[k] || 0, total }); }
+    if (series.length === 1) { const prev = new Date(series[0].k + 'T12:00:00'); prev.setDate(prev.getDate() - 1); series.unshift({ k: prev.toISOString().slice(0, 10), added: 0, total: 0 }); }
+    const W2 = 640, H2 = 240, m = { l: 40, r: 16, t: 16, b: 28 };
+    const niceStep = (v) => { const e = Math.pow(10, Math.floor(Math.log10(v))); const f = v / e; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e; };
+    const step = niceStep(Math.max(total, 5) / 5), maxY = Math.ceil(total / step) * step || step, ticks = maxY / step;
+    const px = (i) => m.l + (i / (series.length - 1)) * (W2 - m.l - m.r), py = (v) => H2 - m.b - (v / maxY) * (H2 - m.t - m.b);
+    const s2 = svgEl('svg', { viewBox: `0 0 ${W2} ${H2}`, role: 'img', 'aria-label': 'Toplam ayrılan kişi sayısının zamana göre değişimi' });
+    for (let g = 0; g <= ticks; g++) { const v = step * g; s2.append(svgEl('line', { x1: m.l, x2: W2 - m.r, y1: py(v), y2: py(v), stroke: '#e4e4e0' }), svgEl('text', { x: m.l - 8, y: py(v) + 4, 'text-anchor': 'end' }, Math.round(v))); }
+    const xstep = Math.max(1, Math.ceil(series.length / 6));
+    series.forEach((p, i) => { if (i % xstep === 0 || i === series.length - 1) s2.append(svgEl('text', { x: px(i), y: H2 - 8, 'text-anchor': i === 0 ? 'start' : i === series.length - 1 ? 'end' : 'middle' }, fmtShort(p.k))); });
+    const pts = series.map((p, i) => `${px(i)},${py(p.total)}`).join(' ');
+    s2.append(svgEl('polyline', { points: `${px(0)},${py(0)} ${pts} ${px(series.length - 1)},${py(0)}`, fill: 'rgba(196,22,28,.08)', stroke: 'none' }));
+    s2.append(svgEl('polyline', { points: pts, fill: 'none', stroke: '#c4161c', 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+    const last = series[series.length - 1];
+    s2.append(svgEl('circle', { cx: px(series.length - 1), cy: py(last.total), r: 5, fill: '#c4161c', stroke: '#fff', 'stroke-width': 2 }));
+    s2.append(svgEl('text', { x: px(series.length - 1) - 10, y: py(last.total) - 10, 'text-anchor': 'end', class: 'lbl' }, `${last.total} kişi`));
+    const cross = svgEl('line', { y1: m.t, y2: H2 - m.b, stroke: '#151515', 'stroke-width': 1, visibility: 'hidden' }); s2.append(cross);
+    const tip2 = tooltip(lb);
+    const over = svgEl('rect', { x: m.l, y: 0, width: W2 - m.l - m.r, height: H2 - m.b, fill: 'transparent' });
+    over.addEventListener('mousemove', (e) => {
+      const b = lb.getBoundingClientRect(), sv = s2.getBoundingClientRect();
+      const rel = (e.clientX - sv.left) / sv.width * W2;
+      const i = Math.max(0, Math.min(series.length - 1, Math.round((rel - m.l) / (W2 - m.l - m.r) * (series.length - 1))));
+      const p = series[i]; cross.setAttribute('x1', px(i)); cross.setAttribute('x2', px(i)); cross.setAttribute('visibility', 'visible');
+      tip2.show(px(i) / W2 * sv.width + (sv.left - b.left), py(p.total) / H2 * sv.height + (sv.top - b.top), `${fmtShort(p.k)}: toplam ${p.total} kişi${p.added ? ` (+${p.added})` : ''}`);
+    });
+    over.addEventListener('mouseleave', () => { tip2.hide(); cross.setAttribute('visibility', 'hidden'); });
+    s2.append(over); lb.prepend(s2);
+    $('lineTable').replaceChildren(simpleTable(['Gün', 'O gün eklenen', 'Toplam'], series.filter((p) => p.added).map((p) => [fmtShort(p.k), '+' + p.added, p.total])));
+  }
+
+  // 3) bekleme listesi
+  const wb = $('waitBox'); wb.replaceChildren();
+  if (!data.waitlist.length) wb.append(el('p', 'Bekleme listesinde kimse yok.', 'empty'));
+  else {
+    const sess = Object.fromEntries(S.map((s) => [s.id, s]));
+    const t = simpleTable(['Oyun günü', 'Ad', 'E-posta', 'Durum'], data.waitlist.map((w) => [sess[w.session_id] ? fmt(sess[w.session_id].date) : w.session_id, w.name || '–', w.email, w.notified ? 'Haber verildi' : 'Bekliyor']));
+    t.className = 'waitlist'; wb.append(t);
+  }
+}
+
 $('login').onsubmit = async (e) => {
   e.preventDefault();
   const r = await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: $('pw').value }) });
   if (r.ok) { $('pw').value = ''; $('err').textContent = ''; load(); } else $('err').textContent = (await r.json()).error;
 };
 $('logout').onclick = async () => { await fetch('/api/admin/logout', { method: 'POST' }); show(false); };
-$('q').oninput = render; $('print').onclick = () => print();
+$('q').oninput = renderRes; $('print').onclick = () => print(); $('print2').onclick = () => print();
 load();
-setInterval(() => { if (!$('panel').hidden && document.visibilityState === 'visible') load(); }, 30000);
+setInterval(() => { if (!$('panel').hidden && document.visibilityState === 'visible' && document.activeElement.tagName !== 'SELECT') load(); }, 30000);
 </script>
 </body>
 </html>
