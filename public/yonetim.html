@@ -114,7 +114,7 @@ async function api(url, opt) {
 }
 function show(on) { $('login').hidden = on; $('panel').hidden = !on; }
 function el(tag, text, cls) { const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
-const money = (n) => `${n.toLocaleString('tr-TR')} ${data.price.currency}`;
+const money = (n) => `${n.toLocaleString('tr-TR')}\u00a0${data.price.currency}`;
 
 async function load() {
   const r = await fetch('/api/admin/data');

@@ -19,7 +19,7 @@
   "price": {
     "amount": 300,
     "oldAmount": 600,
-    "currency": "₺"
+    "currency": "TL"
   },
   "payment": {
     "iban": "TR00 0000 0000 0000 0000 0000 00",

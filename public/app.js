@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
 const fmtDate = (d) => new Date(d + 'T12:00:00').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
-const money = (n, cur) => `${n.toLocaleString('tr-TR')} ${cur}`;
+const money = (n, cur) => `${n.toLocaleString('tr-TR')}\u00a0${cur}`; // TL rakama yapışık kalsın, satır sonunda bölünmesin
 let show, seats = 1;
 const openedAt = Date.now();
 
