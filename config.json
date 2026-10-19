@@ -17,8 +17,8 @@
     "city": "Kadıköy / İstanbul"
   },
   "price": {
-    "amount": 250,
-    "oldAmount": 500,
+    "amount": 300,
+    "oldAmount": 600,
     "currency": "₺"
   },
   "payment": {

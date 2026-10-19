@@ -61,6 +61,7 @@ function renderPage() {
   $('duration').textContent = play.duration;
   $('age').textContent = play.ageLimit;
   $('price').textContent = money(price.amount, price.currency);
+  $('stickyPrice').textContent = money(price.amount, price.currency);
   if (price.oldAmount > price.amount) {
     $('oldPrice').textContent = money(price.oldAmount, price.currency);
     $('badge').textContent = `%${Math.round((1 - price.amount / price.oldAmount) * 100)} İNDİRİM`;
