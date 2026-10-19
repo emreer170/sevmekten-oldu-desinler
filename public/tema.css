@@ -46,13 +46,13 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 .b3 .hero-main .desc { max-width: 52ch; font-size: 1.0625rem; }
 .b3 .hero-main .desc p { margin: 0 0 .875rem; }
 .b3 .by { font-size: .875rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 1rem 0 1.25rem; }
-.b3 .info { margin: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid #151515; }
-.b3 .info > div { padding: .875rem 0; border-bottom: 1px solid var(--line); grid-column: 1 / -1; }
-.b3 .info > .half { grid-column: auto; }
-.b3 .info > .half + .half { padding-left: 1.25rem; border-left: 1px solid var(--line); }
-.b3 .info dt { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.b3 .info dd { margin: .125rem 0 0; font-weight: 600; }
-.b3 .info dd small { display: block; font-weight: 400; color: var(--muted); font-size: .9375rem; }
-.b3 .info dd a { display: inline-block; margin-top: .25rem; font-size: .875rem; font-weight: 600; }
-.b3 .info .price-box { background: var(--accent-soft); padding: .875rem 1rem; border-bottom: 2px solid #151515; }
-.b3 .info .price-box dd { display: flex; align-items: center; gap: .625rem; flex-wrap: wrap; }
+.b3 .spec { margin: 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid #151515; }
+.b3 .spec > div { padding: .875rem 0; border-bottom: 1px solid var(--line); grid-column: 1 / -1; }
+.b3 .spec > .half { grid-column: auto; }
+.b3 .spec > .half + .half { padding-left: 1.25rem; border-left: 1px solid var(--line); }
+.b3 .spec dt { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.b3 .spec dd { margin: .125rem 0 0; font-weight: 600; }
+.b3 .spec dd small { display: block; font-weight: 400; color: var(--muted); font-size: .9375rem; }
+.b3 .spec dd a { display: inline-block; margin-top: .25rem; font-size: .875rem; font-weight: 600; }
+.b3 .spec .price-box { background: var(--accent-soft); padding: .875rem 1rem; border-bottom: 2px solid #151515; }
+.b3 .spec .price-box dd { display: flex; align-items: center; gap: .625rem; flex-wrap: wrap; }

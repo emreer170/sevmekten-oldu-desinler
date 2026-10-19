@@ -55,7 +55,8 @@ function renderPage() {
   document.title = `${play.title} – Bilet Rezervasyonu`;
   $('title').textContent = play.title;
   $('tagline').textContent = play.tagline;
-  if (play.director) { $('director').textContent = `Yönetmen · ${play.director}`; $('director').hidden = false; }
+  const credits = [play.writer && `Yazan · ${play.writer}`, play.director && `Yönetmen · ${play.director}`].filter(Boolean).join('   |   ');
+  if (credits) { $('director').textContent = credits; $('director').hidden = false; }
   $('description').replaceChildren(...play.description.split('\n').filter(Boolean).map((t) => Object.assign(document.createElement('p'), { textContent: t })));
   $('duration').textContent = play.duration;
   $('age').textContent = play.ageLimit;
@@ -71,8 +72,8 @@ function renderPage() {
   if (show.instagram) { $('insta').href = show.instagram; $('insta').hidden = false; }
   if (cast.length) {
     $('oyuncular').hidden = false;
-    if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}`;
-    [...cast].sort((x, y) => x.name.localeCompare(y.name, 'tr')).forEach((p) => {
+    if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}. Oyuncular, canlandırdıkları karakterlere göre sıralanmıştır.`;
+    cast.forEach((p) => {
       const el = document.createElement('div');
       el.className = 'person';
       let pic;

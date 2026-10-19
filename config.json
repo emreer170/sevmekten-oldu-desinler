@@ -1,13 +1,14 @@
 {
   "play": {
     "title": "Sevmekten Öldü Desinler!",
-    "tagline": "Sevmenin, kaybetmenin ve geç kalmanın oyunu.",
-    "description": "Sevmekten Öldü Desinler!, sevgi ve kayıp üzerine kurulu bir tiyatro oyunu. On iki kişilik oyuncu kadrosu, seyirciyi hikâyenin hemen yanı başına, sahnenin yakın mesafesine çağırıyor.\nKadıköy'deki Butik Oyunculuk Atölyesi'nde, küçük salonun samimiyetiyle her cumartesi akşamı 20:30'da perde açılıyor. Salon kapasitesi sınırlı olduğu için biletinizi önceden ayırtmanızı öneririz.",
+    "tagline": "Bir mahalle, bir pavyon ve bitmeyen bir sevda: müzikli bir hikâye.",
+    "description": "İstanbul'un kenar bir mahallesinde yaşayan Gönül, evinden ve mahallesinden kaçıp şarkı söyleyerek kendi hayatını kurmak ister. Peşinde onu hiç bırakmayan sevgilisi Mustafa, mahallenin her şeye yetişmeye çalışan Sevda'sı, sığındığı Butik Pavyon'un sahibi Hamdi ve herkesin kabuğunu değiştirmeye çalışan Ahmet vardır.\nArabesk ve pop şarkılarla örülen oyun; sevmenin, sığınmanın ve yeniden başlamanın bedelini kahkaha ile hüzün arasında soruyor. Oyun yetişkin seyirciye yöneliktir; küfür, şiddet ve ağır temalar içerir.",
     "duration": "90 dakika",
-    "ageLimit": "13+",
+    "ageLimit": "18+",
     "director": "Tevfik Şahin",
     "poster": "",
-    "video": ""
+    "video": "",
+    "writer": "Murat Mahmutyazıcıoğlu"
   },
   "venue": {
     "name": "Butik Oyunculuk Atölyesi",
@@ -31,73 +32,73 @@
   "cast": [
     {
       "name": "Emre Erçörekçi",
-      "role": "",
-      "bio": "",
-      "photo": ""
-    },
-    {
-      "name": "Emre Can Karayel",
-      "role": "",
-      "bio": "",
-      "photo": ""
-    },
-    {
-      "name": "Buse Güner",
-      "role": "",
-      "bio": "",
-      "photo": ""
-    },
-    {
-      "name": "Duru Öztunç",
-      "role": "",
-      "bio": "",
-      "photo": ""
-    },
-    {
-      "name": "Okan Kaynak",
-      "role": "",
-      "bio": "",
-      "photo": ""
-    },
-    {
-      "name": "Eda Çetinkaya",
-      "role": "",
-      "bio": "",
-      "photo": ""
-    },
-    {
-      "name": "Ezgi Selin Koçak",
-      "role": "",
+      "role": "Ahmet",
       "bio": "",
       "photo": ""
     },
     {
       "name": "Taha Berk Gürçay",
-      "role": "",
+      "role": "Ahmet",
       "bio": "",
       "photo": ""
     },
     {
-      "name": "Furkan Birinci",
-      "role": "",
+      "name": "Duru Öztunç",
+      "role": "Gönül",
       "bio": "",
       "photo": ""
     },
     {
-      "name": "Ceren Ekşi",
-      "role": "",
-      "bio": "",
-      "photo": ""
-    },
-    {
-      "name": "Hüseyin Yalçınkaya",
-      "role": "",
+      "name": "Eda Çetinkaya",
+      "role": "Gönül",
       "bio": "",
       "photo": ""
     },
     {
       "name": "Dilek Kara",
-      "role": "",
+      "role": "Gönül",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Ezgi Selin Koçak",
+      "role": "Gönül",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Okan Kaynak",
+      "role": "Hamdi",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Hüseyin Yalçınkaya",
+      "role": "Hamdi",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Emre Can Karayel",
+      "role": "Mustafa",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Furkan Birinci",
+      "role": "Mustafa",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Buse Güner",
+      "role": "Sevda",
+      "bio": "",
+      "photo": ""
+    },
+    {
+      "name": "Ceren Ekşi",
+      "role": "Sevda",
       "bio": "",
       "photo": ""
     }
