@@ -194,7 +194,7 @@ app.post('/api/reservations', (req, res) => {
   if (!session || isPast(session)) return res.status(400).json({ error: 'Lütfen geçerli bir tarih seçin.' });
   if (!name || !surname) return res.status(400).json({ error: 'Ad ve soyad gerekli.' });
   if (!/^\+?[0-9 ()-]{10,20}$/.test(phone)) return res.status(400).json({ error: 'Geçerli bir telefon numarası girin.' });
-  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'E-posta adresi geçersiz.' });
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'Onay ve hatırlatma maili için geçerli bir e-posta adresi girin.' });
   if (!Number.isInteger(seats) || seats < 1 || seats > config.maxSeatsPerReservation)
     return res.status(400).json({ error: `Kişi sayısı 1 ile ${config.maxSeatsPerReservation} arasında olmalı.` });
   const allowed = config.payment.onlineEnabled ? ['gise', 'havale'] : ['gise'];

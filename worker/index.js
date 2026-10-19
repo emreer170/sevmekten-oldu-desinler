@@ -125,7 +125,7 @@ async function reserve(req, env, ctx) {
   if (!session || isPast(session)) return json({ error: 'Lütfen geçerli bir tarih seçin.' }, 400);
   if (!name || !surname) return json({ error: 'Ad ve soyad gerekli.' }, 400);
   if (!/^\+?[0-9 ()-]{10,20}$/.test(phone)) return json({ error: 'Geçerli bir telefon numarası girin.' }, 400);
-  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: 'E-posta adresi geçersiz.' }, 400);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: 'Onay ve hatırlatma maili için geçerli bir e-posta adresi girin.' }, 400);
   if (!Number.isInteger(seats) || seats < 1 || seats > config.maxSeatsPerReservation)
     return json({ error: `Kişi sayısı 1 ile ${config.maxSeatsPerReservation} arasında olmalı.` }, 400);
   const allowed = config.payment.onlineEnabled ? ['gise', 'havale'] : ['gise'];
