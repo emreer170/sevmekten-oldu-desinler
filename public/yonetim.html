@@ -224,7 +224,7 @@ function renderRes() {
     if (r.email) whoWrap.append(el('small', r.email));
     if (r.note) whoWrap.append(el('small', '“' + r.note + '”'));
     const a = el('a', r.phone); a.href = 'tel:' + r.phone.replace(/[^+\d]/g, '');
-    const pay = el('span', (r.payment_method === 'havale' ? 'Havale' : 'Gişe, nakit') + ' · ' + (r.paid ? 'ödendi' : 'bekliyor'), 'tag ' + (r.paid ? 'ok' : 'wait'));
+    const pay = el('span', (r.payment_method === 'havale' ? 'Havale' : 'WhatsApp') + ' · ' + (r.paid ? 'ödendi' : 'bekliyor'), 'tag ' + (r.paid ? 'ok' : 'wait'));
     const act = el('td', null, 'act');
     const tog = el('button', r.paid ? 'Ödenmedi yap' : 'Ödendi işaretle', r.paid ? '' : 'primary');
     tog.onclick = async () => { await patch(r.id, { paid: !r.paid }); load(); };
@@ -256,7 +256,7 @@ function renderDoor() {
   const expected = all.reduce((a, r) => a + r.seats, 0), came = all.filter((r) => r.arrived).reduce((a, r) => a + r.seats, 0);
   const toCollect = all.filter((r) => !r.paid).reduce((a, r) => a + r.seats, 0) * data.price.amount;
   const sum = $('doorSum'); sum.replaceChildren();
-  [['Beklenen', expected + ' kişi'], ['Gelen', came + ' kişi'], ['Gelmesi beklenen', (expected - came) + ' kişi'], ['Gişede toplanacak', money(toCollect)]]
+  [['Beklenen', expected + ' kişi'], ['Gelen', came + ' kişi'], ['Gelmesi beklenen', (expected - came) + ' kişi'], ['Tahsil edilecek', money(toCollect)]]
     .forEach(([k, v]) => { const d = el('div'); d.append(el('b', v), el('span', k)); sum.append(d); });
   const box = $('guests'); box.replaceChildren(); $('doorEmpty').hidden = list.length > 0;
   list.forEach((r) => {

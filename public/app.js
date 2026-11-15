@@ -163,6 +163,19 @@ function setupContact() {
   });
 }
 
+let waTimer;
+function setupWaSend(body, data) {
+  const num = (show.contact?.whatsapp || '').replace(/\D/g, '').replace(/^0/, '');
+  const btn = $('waSend');
+  if (!num) { btn.hidden = true; $('waCountdown').textContent = 'Ödeme için bizimle iletişime geçin.'; return; }
+  const text = `Merhaba, ${body.name} ${body.surname} adına ${data.seats} kişilik bilet almak istiyorum.\nTarih: ${fmtDate(data.session.date)}, saat ${data.session.time}\nRezervasyon kodum: ${data.code}`;
+  const url = `https://wa.me/90${num}?text=${encodeURIComponent(text)}`;
+  btn.href = url;
+  clearTimeout(waTimer);
+  waTimer = setTimeout(() => { $('waCountdown').textContent = 'WhatsApp açılıyor…'; location.href = url; }, 2500);
+  btn.addEventListener('click', () => clearTimeout(waTimer));
+}
+
 let nextTimer;
 function setupNext() {
   clearInterval(nextTimer);
@@ -209,7 +222,8 @@ $('form').addEventListener('submit', async (e) => {
     $('form').hidden = true;
     $('done').hidden = false;
     $('code').textContent = data.code;
-    $('summary').textContent = `${fmtDate(data.session.date)}, saat ${data.session.time} · ${data.seats} kişi · ${money(data.total, show.price.currency)} · ${data.method === 'havale' ? 'Havale ile ödenecek' : 'Gişede nakit ödenecek'}`;
+    $('summary').textContent = `${fmtDate(data.session.date)}, saat ${data.session.time} · ${data.seats} kişi · ${money(data.total, show.price.currency)} · Ödeme WhatsApp'tan tamamlanacak`;
+    setupWaSend(body, data);
     if (data.method === 'havale') {
       $('bank').hidden = false;
       $('iban').textContent = show.payment.iban;
@@ -326,7 +340,7 @@ function showReservation(d, creds) {
   box.replaceChildren();
   box.append(make('h3', `${d.name} ${d.surname}`));
   box.append(make('p', d.session ? `${fmtDate(d.session.date)}, saat ${d.session.time} · ${d.seats} kişi · ${money(d.total, show.price.currency)}` : ''));
-  box.append(make('p', d.paid ? 'Ödemeniz alındı.' : 'Ödeme oyun günü gişede nakit alınacak.', 'muted'));
+  box.append(make('p', d.paid ? 'Ödemeniz alındı.' : 'Ödeme WhatsApp üzerinden tamamlanır.', 'muted'));
   if (d.session) {
     const row = make('div', null, 'actions');
     const g = make('a', "Google Takvim'e ekle", 'btn ghost'); g.target = '_blank'; g.rel = 'noopener';

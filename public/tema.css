@@ -189,3 +189,9 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 /* afişin bulanık ışığı yatay kaydırma yaratmasın */
 body.b3 { overflow-x: clip; }
 .b3 .wa-btn { justify-content: center; text-align: center; }
+
+/* ödeme: WhatsApp */
+.b3 .paynote { display: grid; gap: .25rem; padding: .875rem 1rem; border: 1px solid #128c4a; background: #e9f7ef; font-size: .9375rem; }
+.b3 .paynote span { color: var(--muted); }
+.b3 .wasend { margin: 1.25rem 0; padding: 1.25rem; background: #e9f7ef; border: 1px solid #128c4a; display: grid; gap: .5rem; justify-items: center; }
+.b3 .wasend p { margin: 0; }

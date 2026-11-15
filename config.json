@@ -199,7 +199,7 @@
     },
     {
       "q": "Bilet ücreti nedir, nasıl ödenir?",
-      "a": "Erken rezervasyon fiyatı kişi başı 300 TL'dir. Ödeme oyun günü gişede yalnızca nakit olarak alınır."
+      "a": "Erken rezervasyon fiyatı kişi başı 300 TL'dir. Formu doldurunca WhatsApp açılır ve hazır bir mesaj gelir. Ödeme bilgilerini WhatsApp'tan paylaşıyoruz, ödeme orada tamamlanır."
     },
     {
       "q": "Biletleri başka yerden alabilir miyim?",
@@ -207,7 +207,7 @@
     },
     {
       "q": "Rezervasyon yaptım, şimdi ne yapmalıyım?",
-      "a": "Hiçbir şey. Onay mailine ve ekrandaki koda bakın. Oyun günü gişede rezervasyon kodunuzu söylemeniz yeterli. Oyundan bir gün önce size hatırlatma maili göndeririz."
+      "a": "Formu gönderince WhatsApp otomatik açılır. Hazır gelen mesajı göndermeniz yeterli, ödemeyi orada tamamlıyoruz. Onay mailine ve ekrandaki koda da bakın. Oyundan bir gün önce size hatırlatma maili göndeririz."
     },
     {
       "q": "Rezervasyonumu iptal edebilir miyim?",

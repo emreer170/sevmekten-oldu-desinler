@@ -73,7 +73,8 @@
       </fieldset>
       <fieldset>
         <legend><span class="n">4</span> Ödeme</legend>
-        <label class="choice"><input type="radio" name="paymentMethod" value="gise" checked><span><strong>Gişede öde</strong><small>Oyun günü gişede yalnızca nakit ödeme alınır.</small></span></label>
+        <input type="hidden" name="paymentMethod" value="gise">
+        <div class="paynote"><strong>Ödeme WhatsApp üzerinden</strong><span>Formu gönderince WhatsApp açılır ve adınız, soyadınız, kişi sayınız yazılı bir mesaj hazır gelir. Sizin yapmanız gereken tek şey "Gönder"e basmak. Ödeme bilgilerini orada paylaşırız.</span></div>
       <p class="wa" id="wa" hidden></p>
       </fieldset>
       <div class="total"><span>Toplam</span><strong id="total">—</strong></div>
@@ -94,7 +95,8 @@
       <h2>Rezervasyonunuz alındı</h2>
       <p>Rezervasyon kodunuz</p><p class="code" id="code"></p><p id="summary"></p>
       <div id="bank" class="bank" hidden><p><strong>Ödeme için IBAN</strong></p><p class="iban" id="iban"></p><p id="bankInfo"></p><button type="button" class="btn ghost" id="copyIban">IBAN'ı kopyala</button></div>
-      <p class="muted">Bu kodu saklayın, gişede söylemeniz yeterli.</p>
+      <div class="wasend"><p><strong>Son adım: ödeme için WhatsApp</strong></p><p class="muted" id="waCountdown">WhatsApp birkaç saniye içinde açılacak. Açılmazsa aşağıdaki düğmeye basın.</p><a class="btn wa-btn" id="waSend" target="_blank" rel="noopener">WhatsApp'a mesaj gönder</a></div>
+      <p class="muted">Bu kodu saklayın. Mesajda da yazılı.</p>
       <div class="actions center"><a class="btn" id="gcal" target="_blank" rel="noopener">Google Takvim'e ekle</a><a class="btn ghost" id="ics">Takvime ekle (.ics)</a></div>
       <p class="wa" id="waDone" hidden></p>
       <button type="button" class="btn ghost" id="shareDone">Arkadaşlarına haber ver</button>

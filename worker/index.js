@@ -116,17 +116,23 @@ function googleCal(session) {
 }
 const manageLine = () => (siteUrl ? `\nRezervasyonunuzu görüntülemek veya iptal etmek için: ${siteUrl}/#sorgu` : '');
 const dayLabel = (date) => new Date(date + 'T12:00:00Z').toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long', timeZone: 'UTC' });
+const waPay = (r, session) => {
+  const num = (config.contact?.whatsapp || '').replace(/\D/g, '').replace(/^0/, '');
+  if (!num) return '';
+  const text = `Merhaba, ${r.name} ${r.surname || ''} adına ${r.seats} kişilik bilet almak istiyorum.\nTarih: ${dayLabel(session.date)}, saat ${session.time}\nRezervasyon kodum: ${r.code}`.replace(/ +adına/, ' adına');
+  return `https://wa.me/90${num}?text=${encodeURIComponent(text)}`;
+};
 const waLine = () => (config.contact?.whatsapp ? `\nSorularınız ya da değişiklik için WhatsApp: ${config.contact.whatsapp}` : '');
 function details({ code, session, seats, method }) {
   const total = seats * config.price.amount;
   const pay = method === 'havale'
     ? `Ödeme: Havale/EFT ile ${total} ${config.price.currency}\nIBAN: ${config.payment.iban}\n${config.payment.accountName} - ${config.payment.bank}\n${config.payment.note}`
-    : `Ödeme: Gişede nakit, ${total} ${config.price.currency}`;
+    : `Ödeme: ${total} ${config.price.currency}, WhatsApp üzerinden tamamlanır`;
   const map = config.venue.mapUrl ? `\nHarita: ${config.venue.mapUrl}` : '';
   return `Rezervasyon kodu: ${code}\nTarih: ${dayLabel(session.date)}, saat ${session.time}\nKişi sayısı: ${seats}\nYer: ${config.venue.name}, ${config.venue.address}${map}\n${pay}`;
 }
 const confirmationText = (r, session) =>
-  `Merhaba ${r.name},\n\n${config.play.title} için rezervasyonunuz onaylandı.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nGişede rezervasyon kodunuzu söylemeniz yeterli. Oyundan önceki gün size bir hatırlatma maili göndereceğiz.\n\nTakvime ekle: ${googleCal(session)}${manageLine()}${waLine()}\n\nGörüşmek üzere!`;
+  `Merhaba ${r.name},\n\n${config.play.title} için rezervasyonunuz onaylandı.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nÖdemeyi WhatsApp üzerinden tamamlıyoruz: ${waPay(r, session)}\n\nOyun günü rezervasyon kodunuzu söylemeniz yeterli. Oyundan önceki gün size bir hatırlatma maili göndereceğiz.\n\nTakvime ekle: ${googleCal(session)}${manageLine()}${waLine()}\n\nGörüşmek üzere!`;
 const reminderText = (r, session) =>
   `Merhaba ${r.name},\n\n${config.play.title} oyunu yarın akşam saat ${session.time}'de başlıyor. Rezervasyonunuzu hatırlatmak istedik.\n\n${details({ code: r.code, session, seats: r.seats, method: r.payment_method })}\n\nOyun başlamadan en az 15 dakika önce gelmenizi öneririz. Planınız değiştiyse lütfen rezervasyonunuzu iptal edin ki yerinizi başkasına açabilelim.${manageLine()}${waLine()}\n\nGörüşmek üzere!`;
 
@@ -169,7 +175,7 @@ async function reserve(req, env, ctx) {
   if (!Number.isInteger(seats) || seats < 1 || seats > config.maxSeatsPerReservation)
     return json({ error: `Kişi sayısı 1 ile ${config.maxSeatsPerReservation} arasında olmalı.` }, 400);
   const allowed = config.payment.onlineEnabled ? ['gise', 'havale'] : ['gise'];
-  if (!allowed.includes(b.paymentMethod)) return json({ error: 'Online ödeme henüz açık değil, gişede nakit ödeme seçin.' }, 400);
+  if (!allowed.includes(b.paymentMethod)) return json({ error: 'Geçersiz ödeme seçimi, lütfen sayfayı yenileyip tekrar deneyin.' }, 400);
 
   const pn = normPhone(phone);
   // Kontenjan ve telefon sınırı kontrolü ile ekleme TEK sorguda yapılır, böylece aynı anda gelen isteklerde kontenjan aşılmaz.
@@ -190,7 +196,7 @@ async function reserve(req, env, ctx) {
         await addHit(db, 'res', ip);
         if (email) {
           const mailer = await makeMailer(env);
-          if (mailer) { await mailer.send(email, `Rezervasyonunuz onaylandı – ${config.play.title}`, confirmationText({ name, code, seats, payment_method: 'gise' }, session)); await mailer.close(); }
+          if (mailer) { await mailer.send(email, `Rezervasyonunuz onaylandı – ${config.play.title}`, confirmationText({ name, surname, code, seats, payment_method: 'gise' }, session)); await mailer.close(); }
         }
       })().catch((e) => console.error(e.message)));
       return json({ ok: true, code, seats, method: 'gise', total: seats * config.price.amount, session: { date: session.date, time: session.time } });
@@ -294,7 +300,7 @@ async function adminCsv(env) {
   const esc = (v) => { let s = String(v ?? ''); if (/^[=+\-@]/.test(s)) s = `'${s}`; return `"${s.replace(/"/g, '""')}"`; };
   const head = ['Kod', 'Tarih', 'Saat', 'Ad', 'Soyad', 'Telefon', 'E-posta', 'Kişi', 'Ödeme', 'Ödendi', 'Not', 'Oluşturulma'];
   const lines = rows.map((r) => { const s = sessionById.get(r.session_id);
-    return [r.code, s?.date, s?.time, r.name, r.surname, r.phone, r.email, r.seats, r.payment_method === 'havale' ? 'Havale' : 'Gişe (nakit)', r.paid ? 'Evet' : 'Hayır', r.note, r.created_at].map(esc).join(','); });
+    return [r.code, s?.date, s?.time, r.name, r.surname, r.phone, r.email, r.seats, r.payment_method === 'havale' ? 'Havale' : 'WhatsApp', r.paid ? 'Evet' : 'Hayır', r.note, r.created_at].map(esc).join(','); });
   return new Response('﻿' + [head.map(esc).join(','), ...lines].join('\r\n'), { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="rezervasyonlar.csv"' } });
 }
 
