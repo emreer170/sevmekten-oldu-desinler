@@ -98,3 +98,94 @@ body.b3 { --bg:#fff; --surface:#fff; --surface-2:#f6f6f4; --ink:#151515; --muted
 .b3 .faq details { border-bottom: 1px solid var(--line); padding: 1rem 0; }
 .b3 .faq details p { margin: .75rem 0 0; color: var(--muted); max-width: 62ch; }
 .b3 .share { border-top: 1px solid var(--line); padding-top: 2.5rem; }
+
+/* ---- canlı üst bölüm: afiş, geri sayım, hareket ---- */
+.b3 .event { max-width: 1120px; }
+.b3 .hero { display: grid; gap: 2.5rem; }
+@media (min-width: 900px) { .b3 .hero { grid-template-columns: 1.1fr .9fr; gap: 3.5rem; align-items: center; } }
+.b3 .hero-main h1 { max-width: 14ch; font-size: clamp(2.75rem, 7vw, 4.5rem); line-height: 1; }
+.b3 .hero-main .actions { margin-top: 1.5rem; }
+
+.afis { margin: 0; position: relative; isolation: isolate; perspective: 1200px; width: min(100%, 420px); justify-self: center; }
+.afis::before { content: ''; position: absolute; inset: 4% 0 -4%; z-index: -1; background: url(/afis-720.webp) center / cover; filter: blur(48px) saturate(1.35); opacity: .5; border-radius: 40%; animation: nefes 8s ease-in-out infinite alternate; }
+.poster-btn { display: block; position: relative; padding: 0; border: 0; background: none; cursor: zoom-in; line-height: 0;
+  transform: rotate(var(--r, 1.5deg)) translate3d(0, var(--py, 0px), 0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .3s ease-out; box-shadow: 0 34px 60px -24px rgb(0 0 0 / .5), 0 10px 24px -12px rgb(0 0 0 / .35); }
+.poster-btn.tilting { transition: transform .08s linear; }
+.poster-btn img { display: block; width: 100%; height: auto; }
+.afis .zoom { position: absolute; right: .75rem; bottom: .75rem; background: rgb(21 21 21 / .82); color: #fff; font: 600 .75rem/1 var(--body); letter-spacing: .06em; text-transform: uppercase; padding: .5rem .7rem; opacity: 0; transform: translateY(6px); transition: opacity .25s, transform .25s; }
+.poster-btn:hover .zoom, .poster-btn:focus-visible .zoom { opacity: 1; transform: none; }
+@media (hover: none) { .afis .zoom { opacity: 1; transform: none; } }
+@media (min-width: 900px) { .afis::before { inset: 4% -12% -4%; } }
+@keyframes nefes { from { transform: scale(.96) rotate(-2deg); } to { transform: scale(1.04) rotate(2deg); } }
+
+.b3 .next { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .25rem .75rem; margin: 0 0 1.25rem; padding: .625rem .9rem; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; font-size: .9375rem; transition: background .2s, transform .2s; }
+.b3 .next:hover { background: var(--accent-soft); transform: translateY(-2px); }
+.b3 .next .nl { color: var(--muted); font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.b3 .next b { text-transform: capitalize; font-weight: 600; }
+.b3 .next .cd { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent-ink); background: var(--accent); padding: .125rem .5rem; }
+.pulse { width: .625rem; height: .625rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 rgb(196 22 28 / .55); animation: nabiz 1.8s ease-out infinite; }
+@keyframes nabiz { to { box-shadow: 0 0 0 .7rem rgb(196 22 28 / 0); } }
+
+/* bilgi şeridi: dört sütun */
+.b3 .spec { margin: 3rem 0 0; display: grid; grid-template-columns: 1fr; border-top: 2px solid #151515; }
+@media (min-width: 760px) { .b3 .spec { grid-template-columns: 1fr 1.5fr 1fr 1.2fr; } .b3 .spec > div + div { padding-left: 1.5rem; border-left: 1px solid var(--line); } }
+.b3 .spec > div { grid-column: auto; padding: 1rem 1rem 1rem 0; border-bottom: 1px solid var(--line); }
+.b3 .spec > .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding-block: 1rem; }
+.b3 .spec > .pair > div { padding: 0; border: 0; }
+.b3 .spec .price-box { padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); }
+
+/* iletişim, Instagram */
+.b3 .wa-btn, .b3 .btn.ghost[id=waTop] { display: inline-flex; align-items: center; gap: .55rem; }
+.b3 .wa-btn { background: #128c4a; }
+.b3 .btn.ghost[id=waTop] { border-color: #128c4a; color: #0b6a37; }
+.b3 .btn.ghost[id=waTop]:hover { background: #e9f7ef; }
+.b3 .ig-title { margin: 1.75rem 0 .5rem; }
+.ig { display: flex; flex-wrap: wrap; gap: .75rem; }
+.ig a { display: flex; align-items: center; gap: .75rem; padding: .75rem 1.1rem; border: 1.5px solid #151515; color: #151515; text-decoration: none; transition: background .2s, color .2s, transform .2s; }
+.ig a:hover { background: #151515; color: #fff; transform: translateY(-2px); }
+.ig b { display: block; font-weight: 600; font-size: .9375rem; line-height: 1.2; }
+.ig small { display: block; opacity: .7; font-size: .8125rem; }
+.ig.small { justify-content: center; }
+.ig.small a { border: 0; padding: .25rem .5rem; gap: .5rem; color: var(--muted); }
+.ig.small a:hover { background: none; color: var(--accent); transform: none; }
+.ig.small small { display: none; }
+
+/* afiş büyütme */
+#lightbox { border: 0; padding: 0; background: transparent; max-width: min(94vw, 720px); max-height: 96vh; overflow: visible; }
+#lightbox::backdrop { background: rgb(0 0 0 / .86); backdrop-filter: blur(4px); }
+#lightbox img { display: block; max-width: 100%; max-height: 94vh; margin: auto; box-shadow: 0 30px 80px rgb(0 0 0 / .6); }
+#lightbox form { position: absolute; top: -.5rem; right: -.5rem; z-index: 2; margin: 0; }
+#lightbox .close { width: 2.5rem; height: 2.5rem; border: 0; border-radius: 50%; background: #fff; color: #151515; font: 400 1.75rem/1 var(--body); cursor: pointer; }
+
+/* kaydırma çubuğu ve başlık */
+.progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 40; background: var(--accent); transform-origin: left; transform: scaleX(var(--p, 0)); pointer-events: none; }
+.b3 .top { transition: box-shadow .25s; } .b3 .top.scrolled { box-shadow: 0 6px 18px -10px rgb(0 0 0 / .35); }
+
+/* hareket: açılış ve kaydırınca belirme */
+.js .hero-main > * { animation: giris .7s cubic-bezier(.2, .7, .2, 1) both; }
+.js .hero-main > :nth-child(2) { animation-delay: .08s; } .js .hero-main > :nth-child(3) { animation-delay: .16s; }
+.js .hero-main > :nth-child(4) { animation-delay: .24s; } .js .hero-main > :nth-child(5) { animation-delay: .32s; }
+.js .hero-main > :nth-child(6) { animation-delay: .4s; }
+.js .poster-btn { animation: afis 1s cubic-bezier(.2, .7, .2, 1) .15s both; }
+@keyframes giris { from { opacity: 0; transform: translateY(22px); } }
+@keyframes afis { from { opacity: 0; transform: translateY(40px) rotate(5deg) scale(.96); } }
+.js .rv { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i, 0) * 55ms); }
+.js .rv.in { opacity: 1; transform: none; }
+
+.b3 .btn { transition: transform .18s, box-shadow .18s, filter .15s, background .2s; }
+.b3 .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgb(196 22 28 / .6); }
+.b3 .btn.ghost:hover, .b3 .wa-btn:hover { box-shadow: 0 10px 20px -12px rgb(0 0 0 / .5); }
+.b3 .person { transition: transform .25s, border-color .25s; }
+.b3 .person:hover { transform: translateY(-4px); border-top-color: var(--accent); border-top-width: 3px; }
+.b3 .person .ph { transition: transform .25s; } .b3 .person:hover .ph { transform: scale(1.12); }
+.b3 .session .sdate { transition: transform .2s; } .b3 .session:hover:not(.full) .sdate { transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) {
+  .js .hero-main > *, .js .poster-btn, .afis::before, .pulse { animation: none; }
+  .js .rv { opacity: 1; transform: none; transition: none; }
+  .poster-btn, .b3 .btn, .b3 .person { transition: none; }
+}
+
+/* afişin bulanık ışığı yatay kaydırma yaratmasın */
+body.b3 { overflow-x: clip; }
+.b3 .wa-btn { justify-content: center; text-align: center; }

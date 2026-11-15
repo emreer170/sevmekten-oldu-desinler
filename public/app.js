@@ -71,10 +71,10 @@ function renderPage() {
   $('venueName').textContent = venue.name;
   $('venueAddress').textContent = venue.address;
   if (venue.mapUrl) { $('mapLink').href = venue.mapUrl; $('mapLink').hidden = false; }
-  if (show.instagram) { $('insta').href = show.instagram; $('insta').hidden = false; }
   if (cast.length) {
     $('oyuncular').hidden = false;
-    if (play.director) $('directorLine').textContent = `Yönetmen: ${play.director}`;
+    const line = [play.writer && `Yazan: ${play.writer}`, play.director && `Yönetmen: ${play.director}`, ...(play.crew || []).map((c) => `${c.role}: ${c.name}`)].filter(Boolean);
+    $('directorLine').textContent = line.join('  ·  ');
     $('cast').replaceChildren();
     cast.forEach((p) => {
       const el = document.createElement('div');
@@ -96,15 +96,15 @@ function renderPage() {
     const v = Object.assign(document.createElement('video'), { src: play.video, controls: true, playsInline: true, preload: 'metadata' });
     if (play.poster) v.poster = play.poster;
     media.append(v); media.hidden = false;
-  } else if (play.poster) {
-    const i = Object.assign(document.createElement('img'), { src: play.poster, alt: `${play.title} afişi` });
-    media.append(i); media.hidden = false;
   }
   setupWhatsapp();
+  setupContact();
+  setupNext();
   setupMarquee(cast);
   setupExtras();
   renderSessions();
   updateTotal();
+  document.dispatchEvent(new Event('sod:ready'));
 }
 
 function setupMarquee(cast) {
@@ -138,6 +138,49 @@ function setupWhatsapp() {
     }
     el.hidden = false;
   });
+}
+
+const IG_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>';
+const WA_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3.5 20.500l1.500-4.400A8.500 8.500 0 1 1 20.500 11.500Z"/><path d="M9 8.800c.2 2.600 3.200 5.500 5.900 5.900l1.200-1.300-2-1-.9.800c-.8-.4-1.800-1.300-2.200-2.200l.8-.9-1-2Z" fill="currentColor" stroke="none"/></svg>';
+function setupContact() {
+  const num = (show.contact?.whatsapp || '').trim();
+  const intl = show.contact?.international || num;
+  const digits = num.replace(/\D/g, '').replace(/^0/, '');
+  const url = `https://wa.me/90${digits}`;
+  if (num) {
+    const wa = $('waBtn'); wa.href = url; wa.innerHTML = `${WA_ICON}<span>WhatsApp'tan yaz · ${intl}</span>`; wa.hidden = false;
+    const top = $('waTop'); top.href = url; top.innerHTML = `${WA_ICON}<span>WhatsApp</span>`; top.hidden = false;
+  }
+  const accounts = Array.isArray(show.instagram) ? show.instagram : [];
+  ['igLinks', 'igFoot'].forEach((id) => {
+    const box = $(id); box.replaceChildren();
+    accounts.forEach((a) => {
+      const link = Object.assign(document.createElement('a'), { href: a.url, target: '_blank', rel: 'noopener' });
+      link.innerHTML = `${IG_ICON}<span><b></b><small></small></span>`;
+      link.querySelector('b').textContent = a.name; link.querySelector('small').textContent = `@${a.handle}`;
+      box.append(link);
+    });
+  });
+}
+
+let nextTimer;
+function setupNext() {
+  clearInterval(nextTimer);
+  const s = show.sessions.find((x) => x.level !== 'sold') || show.sessions[0];
+  if (!s) { $('next').hidden = true; return; }
+  const at = new Date(`${s.date}T${s.time}:00+03:00`).getTime();
+  const d = new Date(s.date + 'T12:00:00');
+  $('nextDate').textContent = `${d.toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' })} · ${s.time}`;
+  const p2 = (n) => String(n).padStart(2, '0');
+  const tick = () => {
+    const ms = at - Date.now();
+    if (ms <= 0) { $('nextCd').textContent = 'Perde açılıyor'; return; }
+    const t = Math.floor(ms / 1000);
+    const days = Math.floor(t / 86400);
+    $('nextCd').textContent = `${days > 0 ? days + ' gün ' : ''}${p2(Math.floor(t % 86400 / 3600))}:${p2(Math.floor(t % 3600 / 60))}:${p2(t % 60)}`;
+  };
+  tick(); $('next').hidden = false;
+  nextTimer = setInterval(tick, 1000);
 }
 
 async function load() {

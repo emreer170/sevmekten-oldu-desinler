@@ -2,13 +2,23 @@
   "play": {
     "title": "Sevmekten Öldü Desinler!",
     "tagline": "“Masal işte, sevmekten öldü desinler.”",
-    "description": "İstanbul'un içinden ya ölerek ya da kaçarak çıkılan bir mahallesinde, Işıklı Gönül tek bir karar verir: gitmek. Arkasında beste yapmaktan vazgeçmeyen Mustafa, peşini bırakmayan Sevda ve ağır bir ev vardır. Önünde ise tek bir kapı: Butik Pavyon.\nHamdi'nin sahnesi, Ahmet'in kabuğunu kırma cesareti, Sevda'nın bitmeyen sabrı ve hepimizin ezbere bildiği şarkılar. Güldüren, boğazı düğümleyen, sonunda yine de “iyi ki” dedirten müzikli bir akşam.\n14 yaş ve üzeri seyirciye uygundur. Küfür, şiddet ve ağır temalar içerir.",
+    "description": "İstanbul'un içinden ya ölerek ya da kaçarak çıkılan bir mahallesinde, Işıklı Gönül tek bir karar verir: gitmek. Arkasında beste yapmaktan vazgeçmeyen Mustafa, peşini bırakmayan Sevda ve ağır bir ev vardır. Önünde ise tek bir kapı: Butik Pavyon.\nHamdi'nin sahnesi, Ahmet'in kabuğunu kırma cesareti, Sevda'nın bitmeyen sabrı ve hepimizin ezbere bildiği şarkılar. Güldüren, boğazı düğümleyen, sonunda yine de “iyi ki” dedirten müzikli bir akşam.\n16 yaş ve üzeri seyirciye uygundur. Küfür, şiddet ve ağır temalar içerir.",
     "duration": "95 dakika",
-    "ageLimit": "14+",
+    "ageLimit": "16+",
     "director": "Tevfik Şahin",
-    "poster": "",
+    "poster": "/afis.jpg",
     "video": "",
-    "writer": "Murat Mahmutyazıcıoğlu"
+    "writer": "Murat Mahmutyazıcıoğlu",
+    "crew": [
+      {
+        "role": "Reji asistanı",
+        "name": "Atahan Emre Şensoy"
+      },
+      {
+        "role": "Müzik düzenleme",
+        "name": "Emre Erçörekçi, Furkan Taha Birinci"
+      }
+    ]
   },
   "venue": {
     "name": "Butik Oyunculuk Atölyesi",
@@ -29,7 +39,18 @@
     "note": "Açıklama kısmına rezervasyon kodunuzu yazmanız yeterli.",
     "onlineEnabled": false
   },
-  "instagram": "",
+  "instagram": [
+    {
+      "name": "Butik Oyunculuk Atölyesi",
+      "handle": "butikoyunculukatolyesi",
+      "url": "https://www.instagram.com/butikoyunculukatolyesi/"
+    },
+    {
+      "name": "Butik Tiyatro",
+      "handle": "butiktiyatro",
+      "url": "https://www.instagram.com/butiktiyatro/"
+    }
+  ],
   "cast": [
     {
       "name": "Emre Erçörekçi",
@@ -86,7 +107,7 @@
       "photo": ""
     },
     {
-      "name": "Furkan Birinci",
+      "name": "Furkan Taha Birinci",
       "role": "Mustafa",
       "bio": "",
       "photo": ""
@@ -158,7 +179,8 @@
     "minFormSeconds": 4
   },
   "contact": {
-    "whatsapp": "0537 935 67 39"
+    "whatsapp": "0537 935 67 39",
+    "international": "+90 537 935 67 39"
   },
   "site": {
     "url": "https://sevmekten-oldu-desinler.sod-oyun.workers.dev"
@@ -173,11 +195,15 @@
     },
     {
       "q": "Yaş sınırı var mı?",
-      "a": "Oyun 14 yaş ve üzeri seyirciye uygundur. Oyun küfür, şiddet ve ağır temalar içerir."
+      "a": "Oyun 16 yaş ve üzeri seyirciye uygundur. Oyun küfür, şiddet ve ağır temalar içerir."
     },
     {
       "q": "Bilet ücreti nedir, nasıl ödenir?",
       "a": "Erken rezervasyon fiyatı kişi başı 300 TL'dir. Ödeme oyun günü gişede yalnızca nakit olarak alınır."
+    },
+    {
+      "q": "Biletleri başka yerden alabilir miyim?",
+      "a": "Hayır. Biletler yalnızca bu site ve +90 537 935 67 39 numaralı WhatsApp hattımız üzerinden satılır. Başka bir satış noktası yoktur."
     },
     {
       "q": "Rezervasyon yaptım, şimdi ne yapmalıyım?",
@@ -197,7 +223,7 @@
     },
     {
       "q": "Sorum başka bir şey, nereden ulaşırım?",
-      "a": "WhatsApp numaramızdan bize yazabilirsiniz. Numara sayfada rezervasyon bölümünün altında yer alıyor."
+      "a": "WhatsApp numaramızdan (+90 537 935 67 39) bize yazabilirsiniz. Instagram'da Butik Tiyatro ve Butik Oyunculuk Atölyesi hesaplarından da ulaşabilirsiniz."
     }
   ]
 }

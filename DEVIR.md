@@ -4,7 +4,7 @@ Bu dosyayı oku, sonra çalış. Kullanıcıyla **Türkçe**, **çok basit ve ad
 
 ## Proje
 Tek bir tiyatro oyunu için (Sevmekten Öldü Desinler!) tarih seçip yer ayırtılan, ödeme gişede nakit olan, ortak şifreli yönetici paneli olan basit bir site. Instagram bio'larında (12 oyuncu paylaşacak) linki kullanılacak.
-- Yazan: Murat Mahmutyazıcıoğlu, Yönetmen: Tevfik Şahin. Oyun müzikli, kara mizah/dram; küfür/şiddet içerir. Yaş sınırı **14+**. Süre **95 dk**.
+- Yazan: Murat Mahmutyazıcıoğlu, Yönetmen: Tevfik Şahin. Oyun müzikli, kara mizah/dram; küfür/şiddet içerir. Yaş sınırı **16+** (afişte yazıyor). Süre **95 dk**.
 - Mekân: Butik Oyunculuk Atölyesi, Kadıköy (Acıbadem Mah. Sarayardı Cad. No:82 D:6, Çakmak İş Merkezi Kat:1). Söğütlüçeşme Metrobüs ve Marmaray'a ~5 dk yürüme (kullanıcı söyledi).
 - Tarihler: 31 Ekim 2026'dan 26 Aralık'a her cumartesi 20:30 (9 oyun), kontenjan **43** (kullanıcı kontenjanı müşteriye göstermek istemiyor, sadece "sınırlı sayıda / hızla tükeniyor / son N bilet" gibi ibareler görünür).
 - Fiyat: ~~600 TL~~ **300 TL** "Erken rezervasyon fiyatı" (%50 indirim etiketi). Para birimi **TL** (₺ glifi yazı tipinde bozuk görünüyordu).
@@ -19,7 +19,7 @@ Tek bir tiyatro oyunu için (Sevmekten Öldü Desinler!) tarih seçip yer ayırt
 
 ## Mimari (tek kod yolu)
 - `worker/index.js`: Cloudflare Worker; tüm API (`/api/*`), D1 sorguları, e-posta (Gmail SMTP `worker-mailer` ya da Resend), günlük hatırlatma + yönetici özet maili. Şema ilk istekte kendini kurar/göç eder (`ensureSchema`; yeni sütun/tablo eklerken `SCHEMA` ve `NEW_COLUMNS` dizilerine ekle, `schema.sql`'i de güncelle).
-- `public/`: statik site (Cloudflare "assets"). `index.html` + `tema.css` (kullanılan tema) + `style.css` (temel) + `app.js`; `yonetim.html` panel (sekmeler: Rezervasyonlar, Gişe, İstatistik); `og.png` (link önizleme kartı), `hikaye.png` (Instagram hikâye görseli), `favicon.svg`. `public/tasarim/` eski tasarım taslakları (`.assetsignore` ile yayına gitmiyor).
+- `public/`: statik site (Cloudflare "assets"). `index.html` + `tema.css` (kullanılan tema) + `style.css` (temel) + `app.js`; `yonetim.html` panel (sekmeler: Rezervasyonlar, Gişe, İstatistik); `afis.jpg` / `afis-720.webp` (oyun afişi), `og.jpg` (link önizleme kartı, afişten kırpıldı), `hikaye.jpg` (Instagram hikâye görseli, afişten), `canli.js` (kaydırınca belirme, afiş eğilmesi, geri sayım dışı hareketler), `favicon.svg`. `public/tasarim/` eski tasarım taslakları (`.assetsignore` ile yayına gitmiyor).
 - `config.json`: tüm içerik tek yerde (oyun metni, tarihler, kapasite, fiyat, oyuncular, SSS, mekân, WhatsApp, limitler, site url). Değişince push yeterli.
 - Eski Node/Express sunucusu kaldırıldı. Yerel deneme: `baslat.bat`/`baslat.command` (wrangler dev, port 8787, mailler konsola yazılır).
 - Tasarım kararı: açık renkli, sade/tipografik ("B3": Newsreader + Onest, kırmızı #c4161c vurgu). Kullanıcı Impeccable denetleyicisiyle çalışmamı istemişti (`npx impeccable detect`); tasarım değişikliklerini bununla denetle. Kayan oyuncu şeridi başlık çubuğunun altında.
@@ -29,8 +29,8 @@ Tarih listesi ay başlıklı; kıtlık ibareleri; kişi sayısı; ad/soyad/telef
 - Online ödeme/havale kaldırıldı (kod `onlineEnabled:false` ile kapalı). IBAN yok.
 
 ## Bekleyenler / yapılacaklar
-1. **WhatsApp numarası** (kullanıcı henüz vermedi): `config.json` → `contact.whatsapp` (örn. `"0555 123 45 67"`). Sitede ve maillerde otomatik görünür.
-2. **Oyuncu fotoğrafları/tanıtım yazıları**, **afiş**, **tanıtım videosu**: `config.json` içinde `cast[].photo`, `cast[].bio`, `play.poster`, `play.video` (dosyaları `public/` altına koy). Gelince `hikaye.png` ve `og.png`'yi yenile (Playwright ile HTML'den ekran görüntüsü alınmıştı).
+1. ~~WhatsApp numarası~~ yapıldı: +90 537 935 67 39 (`contact.whatsapp`). Biletler yalnızca site + bu WhatsApp hattından satılır (sitede belirtildi). Instagram: @butikoyunculukatolyesi ve @butiktiyatro (`config.json` → `instagram` dizisi).
+2. **Oyuncu fotoğrafları/tanıtım yazıları**, **tanıtım videosu** (afiş eklendi: `play.poster`): `config.json` içinde `cast[].photo`, `cast[].bio`, `play.poster`, `play.video` (dosyaları `public/` altına koy). 
 3. **Alan adı**: kısa ve özenli link için domain satın alma planlandı (Cloudflare Registrar önerildi). Alınınca `wrangler.jsonc`'a `routes` (custom_domain) eklenir, `config.json` → `site.url` ve `public/index.html` içindeki `og:url`/`og:image` adresleri güncellenir.
 4. IBAN ve online ödeme ileride istenirse eklenir.
 5. Gerçek Gmail ile yeni mail türlerinin (iptal, bekleme listesi, yönetici özeti) ilk gönderimi canlıda gözlenmedi; onay maili çalışıyor (kullanıcı aldı).
